@@ -1,0 +1,1 @@
+Site navigation uses six dedicated content routes with a shared Titans shell because each story chapter must be shareable and focused; the home-only console opening stays in that shell to avoid repeating across routes.
