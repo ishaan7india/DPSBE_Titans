@@ -6,7 +6,9 @@ import {
   ArrowRight,
   ArrowUpRight,
   ChevronRight,
+  Film,
   Instagram,
+  Maximize2,
   Menu,
   Play,
   Terminal,
@@ -17,6 +19,10 @@ import {
 } from "lucide-react";
 import heroImage from "@/assets/titans-engineering-hero.jpg";
 import detailImage from "@/assets/titans-technical-detail.jpg";
+import journeyBanner from "@/assets/media/titans-journey-banner.jpg";
+import posterImg from "@/assets/media/titans-team-poster.jpg";
+import robotRealImg from "@/assets/media/titans-competition-robot.jpg";
+import workshopImg from "@/assets/media/titans-workshop-session.jpg";
 import { teamMembers, arenaRoles, engineeringSupport } from "@/data/team";
 import { buildStages, highlights, mediaFilters, seasonStages, stats } from "@/data/season";
 import { engineeringDisciplines, gameFields, robotSpecs } from "@/data/robot";
@@ -319,8 +325,8 @@ function Robot() {
       </div>
       <div className="robot-visual mt-14">
         <img
-          src={heroImage}
-          alt="Replaceable abstract robot engineering visual"
+          src={robotRealImg}
+          alt="DPSBE Titans 2026 Competition Robot with custom 4WD chassis and claw"
           loading="lazy"
           width={1920}
           height={1080}
@@ -383,7 +389,23 @@ function BuildJourney() {
     <section id="build" className="bg-background px-page py-section">
       <SectionLabel>04 — PROCESS</SectionLabel>
       <div className="grid gap-12 lg:grid-cols-[.8fr_1.2fr]">
-        <EditorialTitle lines={["FROM", "IDEA", "TO", "ARENA."]} />
+        <div>
+          <EditorialTitle lines={["FROM", "IDEA", "TO", "ARENA."]} />
+          <div className="mt-8 overflow-hidden rounded-lg border border-border bg-surface">
+            <img
+              src={workshopImg}
+              alt="Titans crew prototyping and wiring in the robotics lab"
+              className="aspect-video w-full object-cover transition-transform duration-500 hover:scale-105"
+              loading="lazy"
+              width={1280}
+              height={720}
+            />
+            <div className="flex items-center justify-between px-4 py-2.5 font-mono text-[0.62rem] text-muted-foreground">
+              <span>WORKSHOP ARCHIVE / CREW LAB SESSION</span>
+              <span className="font-bold text-primary">#174</span>
+            </div>
+          </div>
+        </div>
         <div className="border-t border-border">
           {buildStages.map((stage, index) => (
             <div key={stage} className="border-b border-border">
@@ -400,7 +422,7 @@ function BuildJourney() {
               </Button>
               {active === index && (
                 <div id={`stage-panel-${index}`} className="stage-panel">
-                  <p>STAGE ARCHIVE / TO BE UPDATED</p>
+                  <p>STAGE ARCHIVE / ACTIVE SEASON</p>
                   <span>PHOTOS · VIDEO · CAD · NOTES · TESTING · BUILD LOGS</span>
                 </div>
               )}
@@ -523,17 +545,124 @@ function BuildLog() {
   );
 }
 
+type MediaItem = {
+  id: string;
+  type: "video" | "image";
+  title: string;
+  subtitle: string;
+  badge: string;
+  categories: string[];
+  src: string;
+  thumbnail: string;
+  featured?: boolean;
+};
+
+const mediaGalleryItems: MediaItem[] = [
+  {
+    id: "season-reel",
+    type: "video",
+    title: "TITANS 2026 OFFICIAL SEASON REEL",
+    subtitle: "Complete team highlights, robot action, and arena journey recap",
+    badge: "OFFICIAL VIDEO",
+    categories: ["ALL", "COMPETITION", "ROBOT", "TEAM", "BEHIND THE SCENES"],
+    src: "/media/titans-season-video.mp4",
+    thumbnail: journeyBanner,
+    featured: true,
+  },
+  {
+    id: "competition-robot-real",
+    type: "image",
+    title: "DPSBE TITANS 2026 COMPETITION ROBOT",
+    subtitle:
+      "Custom 4WD chassis, high-torque drivetrain, central electronics bay & acrylic intake claw",
+    badge: "OFFICIAL ROBOT",
+    categories: ["ALL", "ROBOT", "BUILD", "COMPETITION"],
+    src: robotRealImg,
+    thumbnail: robotRealImg,
+    featured: true,
+  },
+  {
+    id: "team-workshop-session",
+    type: "image",
+    title: "TEAM WORKSHOP & LAB SESSION",
+    subtitle: "Titans engineering crew prototyping, wiring, and programming in the robotics lab",
+    badge: "CREW AT WORK",
+    categories: ["ALL", "TEAM", "BUILD", "BEHIND THE SCENES"],
+    src: workshopImg,
+    thumbnail: workshopImg,
+    featured: true,
+  },
+  {
+    id: "team-roster-poster",
+    type: "image",
+    title: "TITANS #174 OFFICIAL ROSTER POSTER",
+    subtitle: "The 6 core engineering crew members & their tournament roles",
+    badge: "TEAM ROSTER",
+    categories: ["ALL", "TEAM"],
+    src: posterImg,
+    thumbnail: posterImg,
+    featured: true,
+  },
+  {
+    id: "journey-banner",
+    type: "image",
+    title: "MAKE THE JOURNEY COUNT",
+    subtitle: "Official DPSBE Titans 2026 Season cyber-hud identity artwork",
+    badge: "IDENTITY BANNER",
+    categories: ["ALL", "BUILD", "BEHIND THE SCENES"],
+    src: journeyBanner,
+    thumbnail: journeyBanner,
+  },
+  {
+    id: "precision-chassis",
+    type: "image",
+    title: "PRECISION ROBOTICS ENGINEERING",
+    subtitle: "Drivetrain architecture, gearing & structural fabrication detail",
+    badge: "ROBOT MECHANICS",
+    categories: ["ALL", "ROBOT", "BUILD"],
+    src: detailImage,
+    thumbnail: detailImage,
+  },
+  {
+    id: "arena-trials",
+    type: "image",
+    title: "ROBOT ARENA TESTING & SUBSYSTEMS",
+    subtitle: "Autonomous routines and teleoperated scoring cycle trials",
+    badge: "ARENA TESTING",
+    categories: ["ALL", "ROBOT", "TESTING"],
+    src: heroImage,
+    thumbnail: heroImage,
+  },
+  ...teamMembers.map((member) => ({
+    id: `member-${member.number}`,
+    type: "image" as const,
+    title: `${member.name} • #${member.number}`,
+    subtitle: `${member.role} — ${member.grade}`,
+    badge: "CREW MEMBER",
+    categories: ["ALL", "TEAM"],
+    src: member.image || posterImg,
+    thumbnail: member.image || posterImg,
+  })),
+];
+
 function Media() {
   const [filter, setFilter] = useState("ALL");
-  const [preview, setPreview] = useState(false);
+  const [activeMedia, setActiveMedia] = useState<MediaItem | null>(null);
+
   useEffect(() => {
-    if (!preview) return;
+    if (!activeMedia) return;
     const close = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setPreview(false);
+      if (event.key === "Escape") setActiveMedia(null);
     };
     window.addEventListener("keydown", close);
     return () => window.removeEventListener("keydown", close);
-  }, [preview]);
+  }, [activeMedia]);
+
+  const filteredItems =
+    filter === "ALL"
+      ? mediaGalleryItems
+      : mediaGalleryItems.filter((item) => item.categories.includes(filter));
+
   return (
     <section id="media" className="bg-background px-page py-section">
       <SectionLabel>08 — MEDIA ARCHIVE</SectionLabel>
@@ -550,37 +679,117 @@ function Media() {
           </Button>
         ))}
       </div>
+
       <div className="media-grid">
-        <button
-          type="button"
-          className="media-placeholder media-tall"
-          onClick={() => setPreview(true)}
-        >
-          <Play />
-          <span>{filter} / MEDIA PLACEHOLDER</span>
-        </button>
-        <button type="button" className="media-placeholder" onClick={() => setPreview(true)}>
-          <span>IMAGE / TO BE ADDED</span>
-        </button>
-        <button type="button" className="media-placeholder" onClick={() => setPreview(true)}>
-          <span>VIDEO / TO BE ADDED</span>
-        </button>
+        {filteredItems.map((item) => (
+          <div
+            key={item.id}
+            className={`media-card ${item.featured ? "media-card-featured" : ""}`}
+            onClick={() => setActiveMedia(item)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setActiveMedia(item);
+              }
+            }}
+            aria-label={`View ${item.title}`}
+          >
+            <div className="media-card-thumb-wrap">
+              <img
+                src={item.thumbnail}
+                alt={item.title}
+                loading="lazy"
+                className="media-card-thumb"
+              />
+              <span className="media-card-type-tag">
+                {item.type === "video" ? (
+                  <>
+                    <Film size={12} className="text-primary" />
+                    <span>VIDEO</span>
+                  </>
+                ) : (
+                  <>
+                    <Maximize2 size={12} className="text-primary" />
+                    <span>IMAGE</span>
+                  </>
+                )}
+              </span>
+              {item.type === "video" && (
+                <div className="media-card-play-overlay">
+                  <div className="media-card-play-icon">
+                    <Play size={24} fill="currentColor" />
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="media-card-info">
+              <span className="media-card-badge">{item.badge}</span>
+              <h3 className="media-card-title">{item.title}</h3>
+              <p className="media-card-sub">{item.subtitle}</p>
+            </div>
+          </div>
+        ))}
       </div>
-      {preview && (
-        <div className="lightbox" role="dialog" aria-modal="true" aria-label="Media preview">
+
+      {activeMedia && (
+        <div
+          className="media-lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-label={activeMedia.title}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setActiveMedia(null);
+          }}
+        >
           <Button
             variant="icon"
-            onClick={() => setPreview(false)}
+            onClick={() => setActiveMedia(null)}
             aria-label="Close media preview"
-            className="absolute right-5 top-5"
+            className="absolute right-6 top-6 z-50 bg-background/80 hover:bg-background border border-border"
           >
-            <X />
+            <X size={20} />
           </Button>
-          <TechnicalVisual
-            className="aspect-video w-[min(90vw,1100px)]"
-            label="MEDIA PLACEHOLDER / REAL ASSET TO BE ADDED"
-            image={heroImage}
-          />
+
+          <div className="media-lightbox-content">
+            {activeMedia.type === "video" ? (
+              <video
+                src={activeMedia.src}
+                controls
+                autoPlay
+                playsInline
+                className="media-lightbox-media bg-black"
+              />
+            ) : (
+              <img
+                src={activeMedia.src}
+                alt={activeMedia.title}
+                className="media-lightbox-media bg-black"
+              />
+            )}
+            <div className="media-lightbox-footer">
+              <div>
+                <span className="font-mono text-[0.62rem] font-bold tracking-widest text-primary">
+                  {activeMedia.badge}
+                </span>
+                <h4 className="text-base font-bold text-foreground sm:text-lg">
+                  {activeMedia.title}
+                </h4>
+                <p className="font-mono text-xs text-muted-foreground">{activeMedia.subtitle}</p>
+              </div>
+              <a
+                href={activeMedia.src}
+                target="_blank"
+                rel="noreferrer"
+                download={activeMedia.type === "video" ? "titans-season-reel.mp4" : undefined}
+                className="inline-flex items-center gap-2 rounded border border-border bg-primary px-3 py-2 font-mono text-xs font-bold text-primary-foreground transition-colors hover:bg-primary/90"
+              >
+                {activeMedia.type === "video" ? "DOWNLOAD VIDEO" : "VIEW FULL SIZE"}
+                <ArrowUpRight size={14} />
+              </a>
+            </div>
+          </div>
         </div>
       )}
     </section>
@@ -642,29 +851,7 @@ function Social() {
           </p>
         </a>
       </div>
-      <InstagramEmbed />
     </section>
-  );
-}
-
-function InstagramEmbed() {
-  return (
-    <div className="instagram-feature">
-      <div>
-        <SectionLabel>FROM INSTAGRAM</SectionLabel>
-        <h3>@dpsbe_titans</h3>
-        <p>View DPSBE Titans on Instagram</p>
-        <a href={instagram} target="_blank" rel="noreferrer">
-          A post shared by DPSBE Titans (@dpsbe_titans) <ArrowUpRight size={16} />
-        </a>
-      </div>
-      <a className="instagram-profile" href={instagram} target="_blank" rel="noreferrer">
-        <img src={logoAsset} alt="DPSBE Titans logo" loading="lazy" />
-        <span>
-          VIEW ON INSTAGRAM <ArrowUpRight size={16} />
-        </span>
-      </a>
-    </div>
   );
 }
 
