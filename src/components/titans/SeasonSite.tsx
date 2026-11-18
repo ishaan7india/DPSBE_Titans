@@ -22,12 +22,14 @@ import detailImage from "@/assets/titans-technical-detail.jpg";
 import journeyBanner from "@/assets/media/titans-journey-banner.jpg";
 import posterImg from "@/assets/media/titans-team-poster.jpg";
 import robotRealImg from "@/assets/media/titans-competition-robot.jpg";
-import workshopImg from "@/assets/media/titans-workshop-session.jpg";
+import teamWorkingImg from "@/assets/media/titans-team-working.jpg";
 import { teamMembers, arenaRoles, engineeringSupport } from "@/data/team";
 import { buildStages, highlights, mediaFilters, seasonStages, stats } from "@/data/season";
-import { engineeringDisciplines, gameFields, robotSpecs } from "@/data/robot";
+import { engineeringDisciplines, gameFields, kronosSpecs, robotSpecs } from "@/data/robot";
+import { seasonPlanSlides } from "@/data/seasonPlan";
 import { Button } from "@/components/ui/button";
 import { AgentBuildOverlay } from "./AgentBuildOverlay";
+import { SeasonRoadmapSlideshow } from "./SeasonRoadmapSlideshow";
 
 const instagram = "https://instagram.com/dpsbe_titans";
 const youtube = "https://youtube.com/@dpsbe_titans";
@@ -56,8 +58,8 @@ function EditorialTitle({ lines, light = false }: { lines: string[]; light?: boo
 
 function TechnicalVisual({
   className = "",
-  label = "VISUAL ARCHIVE / TO BE UPDATED",
-  image = detailImage,
+  label = "KRONOS / 2026 MACHINE",
+  image = robotRealImg,
 }: {
   className?: string;
   label?: string;
@@ -67,7 +69,7 @@ function TechnicalVisual({
     <div className={`technical-visual group ${className}`}>
       <img
         src={image}
-        alt="Abstract robotics engineering detail"
+        alt="DPSBE Titans 2026 Competition Robot Kronos"
         loading="lazy"
         width={1024}
         height={1280}
@@ -220,7 +222,11 @@ function Intro() {
         <EditorialTitle lines={["SIX", "BUILDERS.", "ONE", "ROBOT."]} />
         <div className="grid gap-8 lg:grid-cols-[.8fr_1.2fr]">
           <div className="hidden lg:block">
-            <TechnicalVisual className="aspect-[3/4]" />
+            <TechnicalVisual
+              className="aspect-[3/4]"
+              image={robotRealImg}
+              label="KRONOS / 2026 MACHINE"
+            />
           </div>
           <div className="space-y-6 border-t border-border pt-6 text-base leading-7 text-muted-foreground">
             <p>
@@ -231,6 +237,15 @@ function Intro() {
               Across mechanical engineering, electronics, programming, driving, strategy and game
               play, six students come together to design, build, test and compete as one team.
             </p>
+            <div className="pt-2">
+              <Link
+                to="/season"
+                className="inline-flex items-center gap-2 rounded-md border border-accent/40 bg-accent/10 px-4 py-2 font-mono text-xs font-semibold text-accent hover:bg-accent/20 transition-colors"
+              >
+                <span>EXPLORE 2026 ROADMAP SLIDESHOW</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -320,28 +335,36 @@ function Robot() {
   return (
     <section id="robot" className="bg-background py-section">
       <div className="px-page">
-        <SectionLabel>03 — THE MACHINE</SectionLabel>
-        <EditorialTitle lines={["MEET", "THE ROBOT."]} />
+        <SectionLabel>03 — THE MACHINE: KRONOS #174</SectionLabel>
+        <EditorialTitle lines={["MEET", "KRONOS."]} />
       </div>
       <div className="robot-visual mt-14">
         <img
           src={robotRealImg}
-          alt="DPSBE Titans 2026 Competition Robot with custom 4WD chassis and claw"
+          alt="DPSBE Titans 2026 Competition Robot Kronos with custom 4WD chassis and claw"
           loading="lazy"
           width={1920}
           height={1080}
         />
         <div className="absolute inset-0 bg-image-overlay" />
-        <p className="absolute bottom-7 left-page text-2xl font-bold">DPSBE TITANS</p>
+        <div className="absolute bottom-7 left-page">
+          <span className="font-mono text-xs font-bold tracking-[0.2em] text-primary">
+            2026 COMPETITION MACHINE
+          </span>
+          <p className="text-3xl font-bold tracking-tight">KRONOS</p>
+        </div>
         <p className="absolute bottom-5 right-page text-[clamp(4rem,13vw,11rem)] font-bold leading-none text-foreground/25">
           #174
         </p>
       </div>
       <div className="grid px-page sm:grid-cols-2 lg:grid-cols-4">
-        {robotSpecs.map((spec) => (
-          <div className="spec-cell" key={spec}>
-            <span>{spec}</span>
-            <strong>COMING SOON</strong>
+        {kronosSpecs.map((spec) => (
+          <div className="spec-cell" key={spec.label}>
+            <span>{spec.label}</span>
+            <strong className="text-foreground">{spec.value}</strong>
+            {spec.detail && (
+              <span className="mt-1 font-mono text-[0.62rem] text-primary">{spec.detail}</span>
+            )}
           </div>
         ))}
       </div>
@@ -352,7 +375,7 @@ function Robot() {
 function Engineering() {
   return (
     <section className="section-light px-page py-section">
-      <SectionLabel>ENGINEERING / 174</SectionLabel>
+      <SectionLabel>ENGINEERING / KRONOS #174</SectionLabel>
       <EditorialTitle lines={["BUILT", "TO WORK."]} light />
       <div className="mt-16 border-t border-ink-border">
         {engineeringDisciplines.map((item, index) => (
@@ -369,8 +392,8 @@ function Engineering() {
             </div>
             {index === 1 && (
               <img
-                src={detailImage}
-                alt="Abstract electronics and mechanisms detail"
+                src={robotRealImg}
+                alt="Kronos robot electronics, chassis and motor wiring detail"
                 loading="lazy"
                 width={1024}
                 height={1280}
@@ -393,7 +416,7 @@ function BuildJourney() {
           <EditorialTitle lines={["FROM", "IDEA", "TO", "ARENA."]} />
           <div className="mt-8 overflow-hidden rounded-lg border border-border bg-surface">
             <img
-              src={workshopImg}
+              src={teamWorkingImg}
               alt="Titans crew prototyping and wiring in the robotics lab"
               className="aspect-video w-full object-cover transition-transform duration-500 hover:scale-105"
               loading="lazy"
@@ -401,7 +424,7 @@ function BuildJourney() {
               height={720}
             />
             <div className="flex items-center justify-between px-4 py-2.5 font-mono text-[0.62rem] text-muted-foreground">
-              <span>WORKSHOP ARCHIVE / CREW LAB SESSION</span>
+              <span>LAB ARCHIVE / TEAM IN ACTION</span>
               <span className="font-bold text-primary">#174</span>
             </div>
           </div>
@@ -436,18 +459,55 @@ function BuildJourney() {
 
 function Season() {
   return (
-    <section id="season" className="section-light px-page py-section">
-      <SectionLabel>05 — 2026 NRL</SectionLabel>
-      <EditorialTitle lines={["THE", "2026", "SEASON."]} light />
-      <div className="season-track">
-        {seasonStages.map((stage, index) => (
-          <div className="season-item" key={stage}>
-            <span>0{index + 1}</span>
-            <div className="season-dot" />
-            <h3>{stage}</h3>
-            <p>TO BE UPDATED</p>
+    <section id="season" className="bg-background px-page py-section">
+      <SectionLabel>05 — 2026 NRL ROADMAP</SectionLabel>
+      <EditorialTitle lines={["THE", "2026", "SEASON."]} />
+
+      <p className="mt-6 max-w-3xl text-sm sm:text-base text-muted-foreground leading-relaxed">
+        The official competition roadmap for DPSBE Titans Team #174. Follow our complete engineering
+        progression from foundational 4WD chassis fabrication to active claw manipulator kinematics,
+        multi-cycle stress validation, and the NRL Regional Championship arena.
+      </p>
+
+      {/* Interactive Season Roadmap Slideshow */}
+      <div className="mt-10">
+        <SeasonRoadmapSlideshow />
+      </div>
+
+      {/* Structured Chronological Stages */}
+      <div className="mt-16">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-4">
+          <div className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-accent" />
+            <h3 className="font-mono text-xs uppercase tracking-widest text-accent font-semibold">
+              CHRONOLOGICAL TIMELINE & PHASES
+            </h3>
           </div>
-        ))}
+          <span className="font-mono text-xs text-muted-foreground">
+            DPSBE TITANS #174 • 6 PHASES
+          </span>
+        </div>
+
+        <div className="season-track mt-6">
+          {seasonStages.map((stage) => (
+            <div className="season-item" key={stage.step}>
+              <span>{stage.step}</span>
+              <div className="season-dot" />
+              <div>
+                <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-accent">
+                  <span className="font-semibold">{stage.phaseCode}</span>
+                  <span className="text-white/30">•</span>
+                  <span className="text-muted-foreground">{stage.dates}</span>
+                </div>
+                <h3 className="mt-1">{stage.name}</h3>
+                <p className="mt-1">{stage.description}</p>
+              </div>
+              <div className="font-mono text-xs font-semibold text-accent/90 border border-accent/20 rounded px-2.5 py-1 bg-accent/5 self-start sm:self-center">
+                {stage.status}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -559,6 +619,17 @@ type MediaItem = {
 
 const mediaGalleryItems: MediaItem[] = [
   {
+    id: "season-roadmap-master",
+    type: "image",
+    title: "THE ROAD TO REGIONALS — NRL 2026 SEASON PLAN",
+    subtitle: "Complete 6-phase engineering masterplan, blueprints & tournament roadmap",
+    badge: "ROADMAP SLIDESHOW",
+    categories: ["ALL", "ROADMAP", "COMPETITION", "BUILD", "TEAM"],
+    src: seasonPlanSlides[0].image,
+    thumbnail: seasonPlanSlides[0].image,
+    featured: true,
+  },
+  {
     id: "season-reel",
     type: "video",
     title: "TITANS 2026 OFFICIAL SEASON REEL",
@@ -572,7 +643,7 @@ const mediaGalleryItems: MediaItem[] = [
   {
     id: "competition-robot-real",
     type: "image",
-    title: "DPSBE TITANS 2026 COMPETITION ROBOT",
+    title: "KRONOS — 2026 COMPETITION ROBOT",
     subtitle:
       "Custom 4WD chassis, high-torque drivetrain, central electronics bay & acrylic intake claw",
     badge: "OFFICIAL ROBOT",
@@ -582,14 +653,14 @@ const mediaGalleryItems: MediaItem[] = [
     featured: true,
   },
   {
-    id: "team-workshop-session",
+    id: "team-working-session",
     type: "image",
-    title: "TEAM WORKSHOP & LAB SESSION",
-    subtitle: "Titans engineering crew prototyping, wiring, and programming in the robotics lab",
+    title: "THE TEAM AT WORK",
+    subtitle: "Titans engineering crew prototyping, wiring, and programming in the lab",
     badge: "CREW AT WORK",
     categories: ["ALL", "TEAM", "BUILD", "BEHIND THE SCENES"],
-    src: workshopImg,
-    thumbnail: workshopImg,
+    src: teamWorkingImg,
+    thumbnail: teamWorkingImg,
     featured: true,
   },
   {
@@ -643,6 +714,16 @@ const mediaGalleryItems: MediaItem[] = [
     src: member.image || posterImg,
     thumbnail: member.image || posterImg,
   })),
+  ...seasonPlanSlides.map((slide) => ({
+    id: `roadmap-slide-${slide.slideNumber}`,
+    type: "image" as const,
+    title: `${slide.phaseCode} • ${slide.title}`,
+    subtitle: `${slide.subtitle} (${slide.dateRange})`,
+    badge: slide.statusBadge,
+    categories: ["ALL", "ROADMAP", "BUILD", "COMPETITION"],
+    src: slide.image,
+    thumbnail: slide.image,
+  })),
 ];
 
 function Media() {
@@ -680,7 +761,30 @@ function Media() {
         ))}
       </div>
 
-      <div className="media-grid">
+      <div className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-accent/30 bg-accent/5 p-4 sm:p-5">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent/20 border border-accent/40 text-accent">
+            <Play className="h-5 w-5 fill-accent" />
+          </div>
+          <div>
+            <h4 className="font-sans font-bold text-foreground text-sm sm:text-base">
+              NRL 2026 Season Plan Slideshow
+            </h4>
+            <p className="font-mono text-xs text-muted-foreground">
+              Interactive 6-phase presentation with blueprint diagrams, milestones & CAD schematics.
+            </p>
+          </div>
+        </div>
+        <Link
+          to="/season"
+          className="inline-flex items-center gap-2 rounded-md bg-accent px-4 py-2 font-mono text-xs font-bold text-black hover:bg-accent/90 transition-colors"
+        >
+          <span>VIEW FULL SLIDESHOW</span>
+          <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
+      </div>
+
+      <div className="media-grid mt-10">
         {filteredItems.map((item) => (
           <div
             key={item.id}

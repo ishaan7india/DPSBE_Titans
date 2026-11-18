@@ -603,15 +603,21 @@
 .season-track {
   margin-top: 5rem;
   display: grid;
-  border-top: 1px solid var(--ink-border);
+  border-top: 1px solid var(--border);
+}
+.section-light .season-track {
+  border-top-color: var(--ink-border);
 }
 .season-item {
   display: grid;
   grid-template-columns: 3rem 1.5rem 1fr auto;
   align-items: center;
   gap: 1rem;
-  border-bottom: 1px solid var(--ink-border);
+  border-bottom: 1px solid var(--border);
   padding-block: 1.5rem;
+}
+.section-light .season-item {
+  border-bottom-color: var(--ink-border);
 }
 .season-item > span {
   font-family: var(--font-mono);
@@ -629,7 +635,10 @@
 }
 .season-item p {
   font-family: var(--font-mono);
-  font-size: 0.6rem;
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+}
+.section-light .season-item p {
   color: var(--ink-muted);
 }
 .game-cell {
