@@ -983,6 +983,89 @@
 .inner-page {
   padding-top: 76px;
 }
+/* Tab switching and page transition animation */
+@keyframes tab-entrance {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.tab-transition {
+  animation: tab-entrance 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity, filter;
+}
+
+/* Glowing laser sweep at top of screen on tab change */
+.tab-transition::before {
+  content: "";
+  position: fixed;
+  top: 72px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--gold) 25%,
+    var(--electric) 75%,
+    transparent 100%
+  );
+  box-shadow: 0 0 12px var(--gold);
+  z-index: 50;
+  pointer-events: none;
+  animation: tab-laser-beam 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes tab-laser-beam {
+  0% {
+    transform: scaleX(0);
+    opacity: 1;
+  }
+  65% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+
+.nav-link {
+  position: relative;
+  transition:
+    color 0.25s ease,
+    transform 0.2s ease;
+}
+.nav-link:hover {
+  transform: translateY(-1px);
+}
+.nav-link-active::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gold);
+  box-shadow: 0 0 8px var(--gold);
+  animation: nav-indicator-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes nav-indicator-in {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
 .inner-page > section:first-child {
   min-height: min(82svh, 800px);
 }

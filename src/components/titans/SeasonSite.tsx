@@ -23,9 +23,25 @@ import journeyBanner from "@/assets/media/titans-journey-banner.jpg";
 import posterImg from "@/assets/media/titans-team-poster.jpg";
 import robotRealImg from "@/assets/media/titans-competition-robot.jpg";
 import teamWorkingImg from "@/assets/media/titans-team-working.jpg";
+import nrlLogo from "@/assets/nrl-logo.png";
+import nrlBadge from "@/assets/nrl-logo-badge.jpg";
 import { teamMembers, arenaRoles, engineeringSupport } from "@/data/team";
-import { buildStages, highlights, mediaFilters, seasonStages, stats } from "@/data/season";
-import { engineeringDisciplines, gameFields, kronosSpecs, robotSpecs } from "@/data/robot";
+import {
+  buildStages,
+  highlights,
+  mediaFilters,
+  seasonHighlights,
+  seasonStages,
+  stats,
+  type SeasonHighlightItem,
+} from "@/data/season";
+import {
+  engineeringDisciplines,
+  gameFields,
+  hyperdriveGameDetails,
+  kronosSpecs,
+  robotSpecs,
+} from "@/data/robot";
 import { seasonPlanSlides } from "@/data/seasonPlan";
 import { Button } from "@/components/ui/button";
 import { AgentBuildOverlay } from "./AgentBuildOverlay";
@@ -111,14 +127,27 @@ function Navbar() {
   }, [open]);
   return (
     <header className={`site-nav ${scrolled || open ? "site-nav-solid" : ""}`}>
-      <Link to="/" className="brand-button" aria-label="Go to home">
-        <img src={logoAsset} alt="" className="brand-logo" />
-        <span>
-          DPSBE TITANS
-          <br />
-          <span className="text-primary">#174</span>
-        </span>
-      </Link>
+      <div className="flex items-center gap-3">
+        <Link to="/" className="brand-button" aria-label="Go to home">
+          <img src={logoAsset} alt="" className="brand-logo" />
+          <span>
+            DPSBE TITANS
+            <br />
+            <span className="text-primary">#174</span>
+          </span>
+        </Link>
+        <span className="hidden sm:inline-block h-6 w-px bg-white/20" />
+        <div className="hidden sm:flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-2.5 py-1">
+          <img
+            src={nrlLogo}
+            alt="National Robotics League"
+            className="h-3.5 w-auto object-contain"
+          />
+          <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+            2026 NRL • HYPERDRIVE
+          </span>
+        </div>
+      </div>
       <nav className="hidden items-center gap-7 lg:flex" aria-label="Main navigation">
         {navItems.map(([label, path]) => (
           <Link
@@ -188,7 +217,14 @@ function Hero() {
       <img src={logoAsset} alt="" className="hero-emblem" aria-hidden="true" />
       <div className="hero-content">
         <div className="flex items-center justify-between border-b border-border pb-4 text-[0.65rem] font-semibold tracking-[0.2em]">
-          <span>2026 NRL SEASON</span>
+          <div className="flex items-center gap-2">
+            <img
+              src={nrlLogo}
+              alt="National Robotics League"
+              className="h-4 w-auto object-contain inline-block"
+            />
+            <span>2026 NRL SEASON // GAME: HYPERDRIVE</span>
+          </div>
           <span>TEAM / 174</span>
         </div>
         <h1 className="hero-title">
@@ -515,17 +551,81 @@ function Season() {
 
 function Game() {
   return (
-    <section className="bg-surface px-page py-section">
-      <div className="grid gap-12 lg:grid-cols-[.75fr_1.25fr]">
+    <section id="game" className="bg-surface px-page py-section">
+      <div className="grid gap-12 lg:grid-cols-[.8fr_1.2fr] items-start">
         <div>
-          <SectionLabel>2026 NRL / TEAM #174</SectionLabel>
-          <EditorialTitle lines={["THE", "GAME."]} />
+          <SectionLabel>2026 NRL OFFICIAL GAME / TEAM #174</SectionLabel>
+          <EditorialTitle lines={["GAME:", "HYPER-", "DRIVE."]} />
+
+          {/* Official League & Sponsors Card with NRL Logo */}
+          <div className="mt-8 rounded-xl border border-white/10 bg-black/40 p-5 space-y-3">
+            <div className="flex items-center gap-3">
+              <img
+                src={nrlLogo}
+                alt="National Robotics League"
+                className="h-6 w-auto object-contain"
+              />
+              <span className="font-mono text-xs uppercase tracking-widest text-accent font-semibold">
+                REGIONAL COMPETITION
+              </span>
+            </div>
+            <p className="font-mono text-xs text-muted-foreground leading-relaxed">
+              Presented by <strong className="text-white">Amazon</strong> • Powered by{" "}
+              <strong className="text-white">The Innovation Story</strong>
+            </p>
+            <div className="flex flex-wrap gap-2 pt-2 border-t border-white/10 font-mono text-[11px]">
+              <span className="rounded bg-accent/15 px-2.5 py-1 text-accent border border-accent/30 font-semibold">
+                2v2 QUAD-SQUAD FORMAT
+              </span>
+              <span className="rounded bg-white/5 px-2.5 py-1 text-white/80 border border-white/10">
+                7-MIN MATCH CYCLES
+              </span>
+              <span className="rounded bg-white/5 px-2.5 py-1 text-white/80 border border-white/10">
+                MAX 6 RP
+              </span>
+            </div>
+          </div>
+
+          <div className="mt-8 space-y-4 text-sm sm:text-base text-muted-foreground leading-relaxed">
+            <p>
+              In <strong className="text-foreground">HYPERDRIVE</strong>, two Squads of two teams
+              each (Red Squad vs Blue Squad) face off on the arena floor. Matches are fast-paced,
+              high-intensity 2v2 tactical battles where alliance teamwork dictates victory.
+            </p>
+            <p>
+              Each match cycle lasts 7 minutes (1:00 pre-match, 2:30 live play, 3:30 field reset).
+              Teams earn Match Score through Squad Specific Cores, Golden Cores, and Space Station
+              docking, chasing up to 6 Ranking Points (RP) per match.
+            </p>
+          </div>
         </div>
-        <div className="grid border-l border-t border-border sm:grid-cols-2">
-          {gameFields.map((field) => (
-            <div className="game-cell" key={field}>
-              <span>{field}</span>
-              <strong>TO BE UPDATED</strong>
+
+        {/* Hyperdrive Tactical Specifications Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {hyperdriveGameDetails.map((field) => (
+            <div
+              key={field.code}
+              className="rounded-xl border border-white/10 bg-black/40 p-5 flex flex-col justify-between hover:border-accent/40 transition-colors"
+            >
+              <div>
+                <div className="flex items-center justify-between text-xs font-mono">
+                  <span className="text-accent font-semibold">{field.code}</span>
+                  {field.badge && (
+                    <span className="rounded bg-white/5 px-2 py-0.5 text-[10px] text-white/70 border border-white/10">
+                      {field.badge}
+                    </span>
+                  )}
+                </div>
+                <h4 className="mt-2 text-base sm:text-lg font-bold text-foreground font-sans uppercase">
+                  {field.title}
+                </h4>
+                <div className="mt-1 font-mono text-xs font-semibold text-accent/90">
+                  {field.value}
+                </div>
+                <p className="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                  {field.description}
+                </p>
+              </div>
             </div>
           ))}
         </div>
@@ -901,32 +1001,148 @@ function Media() {
 }
 
 function Highlights() {
+  const [selectedHighlight, setSelectedHighlight] = useState<SeasonHighlightItem | null>(null);
+
   return (
-    <section className="section-light px-page py-section">
+    <section id="highlights" className="bg-background px-page py-section">
       <SectionLabel>09 — SEASON ARCHIVE</SectionLabel>
-      <EditorialTitle lines={["THE", "HIGHLIGHTS."]} light />
-      <div className="mt-14 grid border-l border-t border-ink-border md:grid-cols-2">
-        {highlights.map((item, index) => (
-          <div className={`highlight-item ${index === 0 ? "md:col-span-2" : ""}`} key={item}>
-            <span>0{index + 1}</span>
-            <h3>{item}</h3>
-            <p>SEASON IN PROGRESS</p>
-          </div>
+      <EditorialTitle lines={["SEASON", "HIGHLIGHTS."]} />
+
+      <p className="mt-6 max-w-2xl text-sm sm:text-base text-muted-foreground leading-relaxed">
+        Key engineering milestones, prototype breakthroughs, and team moments captured across our
+        NRL 2026 Hyperdrive tournament journey.
+      </p>
+
+      <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {seasonHighlights.map((item) => (
+          <article
+            key={item.id}
+            onClick={() => setSelectedHighlight(item)}
+            className="group relative cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-surface/60 backdrop-blur-sm transition-all duration-300 hover:border-accent/60 hover:shadow-xl hover:shadow-accent/5 flex flex-col"
+          >
+            {/* Image Thumbnail */}
+            <div className="relative aspect-[16/11] w-full overflow-hidden bg-black">
+              <img
+                src={item.image}
+                alt={item.title}
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
+
+              {/* Number and Tag Badges */}
+              <div className="absolute top-3 left-3 right-3 flex items-center justify-between font-mono text-[10px]">
+                <span className="rounded bg-black/80 px-2 py-0.5 text-accent border border-accent/40 backdrop-blur-sm font-semibold">
+                  {item.number} • {item.tag}
+                </span>
+                <span className="rounded bg-black/80 px-2 py-0.5 text-white/80 border border-white/10 backdrop-blur-sm">
+                  {item.category}
+                </span>
+              </div>
+            </div>
+
+            {/* Content Details */}
+            <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
+              <div>
+                <h3 className="font-sans text-base sm:text-lg font-bold text-foreground group-hover:text-accent transition-colors uppercase">
+                  {item.title}
+                </h3>
+                <p className="font-mono text-xs text-accent/80 font-medium mt-0.5">
+                  {item.subtitle}
+                </p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
+
+              <div className="pt-3 border-t border-white/10 flex items-center justify-between font-mono text-[11px] text-muted-foreground group-hover:text-foreground">
+                <span>INSPECT HIGHLIGHT</span>
+                <Maximize2 className="h-3.5 w-3.5 text-accent" />
+              </div>
+            </div>
+          </article>
         ))}
       </div>
+
+      {/* Lightbox Modal for Selected Highlight */}
+      {selectedHighlight && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 backdrop-blur-xl animate-in fade-in duration-200"
+          onClick={() => setSelectedHighlight(null)}
+        >
+          <button
+            type="button"
+            onClick={() => setSelectedHighlight(null)}
+            className="absolute top-4 right-4 rounded-full border border-white/20 bg-black/80 p-2.5 text-white hover:bg-white/20 transition-colors"
+            aria-label="Close"
+          >
+            <X className="h-5 w-5" />
+          </button>
+          <div
+            className="relative max-h-[90vh] max-w-4xl overflow-hidden rounded-xl border border-white/20 bg-black shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={selectedHighlight.image}
+              alt={selectedHighlight.title}
+              className="max-h-[70vh] w-full object-contain bg-black"
+            />
+            <div className="p-5 sm:p-6 bg-surface/90 border-t border-white/10">
+              <div className="flex items-center gap-2 font-mono text-xs text-accent">
+                <span>{selectedHighlight.number}</span>
+                <span>•</span>
+                <span>{selectedHighlight.category}</span>
+                <span>•</span>
+                <span>{selectedHighlight.tag}</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-foreground mt-1">
+                {selectedHighlight.title}
+              </h3>
+              <p className="font-mono text-xs text-accent/90 mt-0.5">
+                {selectedHighlight.subtitle}
+              </p>
+              <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+                {selectedHighlight.description}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
 
 function Achievements() {
   return (
-    <section className="bg-background px-page py-section">
-      <SectionLabel>10 — RECORD</SectionLabel>
-      <EditorialTitle lines={["WHAT", "WE'VE", "DONE."]} />
-      <div className="achievement-row">
-        <span>2026</span>
-        <strong>SEASON IN PROGRESS</strong>
-        <span>EVENT / RESULT / DESCRIPTION — TO BE UPDATED</span>
+    <section className="bg-surface px-page py-section">
+      <SectionLabel>10 — TOURNAMENT CAMPAIGN</SectionLabel>
+      <EditorialTitle lines={["ROAD TO", "NATIONALS."]} />
+
+      <div className="mt-12 space-y-4">
+        <div className="achievement-row">
+          <span>2026</span>
+          <strong>NRL REGIONAL CHAMPIONSHIP</strong>
+          <span>BANGALORE EAST • 20 - 21 NOVEMBER 2026 • 2V2 HYPERDRIVE ARENA MATCHES</span>
+        </div>
+        <div className="achievement-row">
+          <span>TARGET</span>
+          <strong>TOP 8 CAPTAINS & ALLIANCES</strong>
+          <span>LEADERBOARD RANKING VIA MATCH WINS & STARBURST/PATTERN/ENDGAME BONUS RP</span>
+        </div>
+        <div className="achievement-row">
+          <span>GOAL</span>
+          <strong>NATIONAL FINALS QUALIFICATION</strong>
+          <span>6 ADVANCING TEAMS: 4 FINALISTS ON THE FIELD + 2 ADVANCING THROUGH AWARDS</span>
+        </div>
+        <div className="achievement-row">
+          <span>JUDGING</span>
+          <strong>TECH TITANS & DESIGN AWARDS</strong>
+          <span>
+            2+ PRINTED COPIES OF ENGINEERING PORTFOLIO SUBMITTED • PIT INTERVIEWS SCHEDULED
+          </span>
+        </div>
       </div>
     </section>
   );
@@ -981,33 +1197,76 @@ function FinalCTA() {
 function Footer() {
   return (
     <footer className="bg-background px-page py-12">
-      <div className="grid gap-10 border-b border-border pb-10 md:grid-cols-3">
-        <p className="text-2xl font-bold">
-          DPSBE TITANS <span className="text-primary">#174</span>
-        </p>
-        <p className="text-xs leading-5 tracking-[.15em]">
-          2026 NRL SEASON
-          <br />
-          DELHI PUBLIC SCHOOL
-          <br />
-          BANGALORE EAST
-        </p>
-        <div className="grid grid-cols-2 gap-3 text-xs font-semibold">
-          {navItems.map(([label, path]) => (
-            <Link to={path} key={path} className="text-left hover:text-primary">
-              {label}
-            </Link>
-          ))}
-          <a href={instagram} target="_blank" rel="noreferrer">
-            INSTAGRAM
-          </a>
-          <a href={youtube} target="_blank" rel="noreferrer">
-            YOUTUBE
-          </a>
+      <div className="grid gap-10 border-b border-border pb-10 md:grid-cols-4">
+        <div>
+          <p className="text-2xl font-bold">
+            DPSBE TITANS <span className="text-primary">#174</span>
+          </p>
+          <p className="mt-3 text-xs leading-5 tracking-[.15em] text-muted-foreground">
+            DELHI PUBLIC SCHOOL
+            <br />
+            BANGALORE EAST
+            <br />
+            ROBOTICS SQUAD
+          </p>
+        </div>
+
+        <div className="flex flex-col justify-between">
+          <div className="flex items-center gap-3">
+            <img
+              src={nrlLogo}
+              alt="National Robotics League"
+              className="h-7 w-auto object-contain"
+            />
+          </div>
+          <p className="text-xs leading-5 text-muted-foreground mt-2">
+            Official Team #174
+            <br />
+            Game: <strong className="text-foreground">HYPERDRIVE</strong>
+            <br />
+            Presented by Amazon • Powered by TIS
+          </p>
+        </div>
+
+        <div>
+          <span className="font-mono text-[10px] uppercase tracking-widest text-accent font-semibold">
+            NAVIGATION
+          </span>
+          <div className="grid grid-cols-2 gap-2 text-xs font-semibold mt-3">
+            {navItems.map(([label, path]) => (
+              <Link to={path} key={path} className="text-left hover:text-primary transition-colors">
+                {label}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <span className="font-mono text-[10px] uppercase tracking-widest text-accent font-semibold">
+            CONNECT
+          </span>
+          <div className="flex flex-col gap-2 text-xs font-semibold mt-3">
+            <a
+              href={instagram}
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-primary transition-colors"
+            >
+              INSTAGRAM @dpsbe_titans
+            </a>
+            <a
+              href={youtube}
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-primary transition-colors"
+            >
+              YOUTUBE @dpsbe_titans
+            </a>
+          </div>
         </div>
       </div>
       <div className="flex flex-col gap-2 pt-6 text-[.65rem] font-semibold tracking-[.15em] text-muted-foreground sm:flex-row sm:justify-between">
-        <span>BUILT BY THE TITANS.</span>
+        <span>BUILT BY THE TITANS • NATIONAL ROBOTICS LEAGUE 2026</span>
         <span>© 2026 DPSBE TITANS</span>
       </div>
     </footer>
@@ -1115,7 +1374,7 @@ export function SeasonSite({ page = "home" }: { page?: SitePage }) {
       <main
         className={`${page === "home" ? "" : "inner-page"} ${
           page === "home" && introActive ? "site-building-mode" : ""
-        }`}
+        } tab-transition`}
         key={page}
       >
         {pages[page]}
