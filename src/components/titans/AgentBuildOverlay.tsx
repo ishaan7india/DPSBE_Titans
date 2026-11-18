@@ -139,6 +139,11 @@ export function AgentBuildOverlay({ onComplete }: AgentBuildOverlayProps) {
   onCompleteRef.current = onComplete;
 
   const handleTerminalDone = useCallback(() => {
+    try {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    } catch {
+      // Ignore
+    }
     setPhase("swarm");
   }, []);
 

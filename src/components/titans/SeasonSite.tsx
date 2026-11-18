@@ -726,22 +726,17 @@ function Footer() {
 export type SitePage = "home" | "team" | "robot" | "build" | "season" | "media";
 
 export function SeasonSite({ page = "home" }: { page?: SitePage }) {
-  const [mounted, setMounted] = useState(false);
-  const [introActive, setIntroActive] = useState(false);
+  const [introActive, setIntroActive] = useState(() => {
+    if (page !== "home") return false;
+    if (typeof window === "undefined") return true;
+    try {
+      return window.sessionStorage.getItem("titans-intro-seen") !== "true";
+    } catch {
+      return true;
+    }
+  });
   const [introKey, setIntroKey] = useState(0);
   const dismissStarted = useRef(false);
-
-  useEffect(() => {
-    setMounted(true);
-    if (page !== "home") return;
-    try {
-      if (window.sessionStorage.getItem("titans-intro-seen") !== "true") {
-        setIntroActive(true);
-      }
-    } catch {
-      setIntroActive(true);
-    }
-  }, [page]);
 
   const finishIntro = useCallback(() => {
     if (dismissStarted.current) return;
@@ -750,6 +745,11 @@ export function SeasonSite({ page = "home" }: { page?: SitePage }) {
       window.sessionStorage.setItem("titans-intro-seen", "true");
     } catch {
       // Continue into the site even when session storage is unavailable.
+    }
+    try {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    } catch {
+      // Ignore
     }
     setIntroActive(false);
   }, []);
@@ -830,7 +830,7 @@ export function SeasonSite({ page = "home" }: { page?: SitePage }) {
         {pages[page]}
       </main>
       <Footer />
-      {mounted && page === "home" && introActive && (
+      {page === "home" && introActive && (
         <AgentBuildOverlay key={introKey} onComplete={finishIntro} />
       )}
     </>

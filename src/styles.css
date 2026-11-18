@@ -1293,7 +1293,7 @@
   position: absolute;
   inset: 0;
   background-size: 40px 40px;
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(229, 169, 60, 0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(229, 169, 60, 0.05) 1px, transparent 1px);
   pointer-events: none;
@@ -1310,7 +1310,9 @@
   background: rgba(9, 11, 18, 0.92);
   border: 1px solid rgba(229, 169, 60, 0.4);
   border-radius: 8px;
-  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.8), 0 0 24px rgba(229, 169, 60, 0.18);
+  box-shadow:
+    0 12px 48px rgba(0, 0, 0, 0.8),
+    0 0 24px rgba(229, 169, 60, 0.18);
   backdrop-filter: blur(14px);
   pointer-events: auto;
   z-index: 80;
@@ -1354,7 +1356,9 @@
   position: absolute;
   opacity: 0;
   transform: scale(0.98);
-  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s ease-out;
+  transition:
+    opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.45s ease-out;
   pointer-events: none;
 }
 
@@ -1390,14 +1394,24 @@
   bottom: 0;
   width: 2px;
   background: #ffffff;
-  box-shadow: 0 0 12px #e5a93c, 0 0 24px #06b6d4;
+  box-shadow:
+    0 0 12px #e5a93c,
+    0 0 24px #06b6d4;
   animation: laser-sweep 2.2s ease-in-out infinite alternate;
 }
 
 @keyframes laser-sweep {
-  0% { left: 0%; opacity: 0.4; }
-  50% { opacity: 1; }
-  100% { left: 100%; opacity: 0.4; }
+  0% {
+    left: 0%;
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0.4;
+  }
 }
 
 /* Box 3: Snapped over 174 Watermark */
@@ -1451,10 +1465,22 @@
   line-height: 1;
 }
 
-.box-corner.tl { top: -3px; left: -3px; }
-.box-corner.tr { top: -3px; right: -3px; }
-.box-corner.bl { bottom: -3px; left: -3px; }
-.box-corner.br { bottom: -3px; right: -3px; }
+.box-corner.tl {
+  top: -3px;
+  left: -3px;
+}
+.box-corner.tr {
+  top: -3px;
+  right: -3px;
+}
+.box-corner.bl {
+  bottom: -3px;
+  left: -3px;
+}
+.box-corner.br {
+  bottom: -3px;
+  right: -3px;
+}
 
 /* Real Circuit SVG Layer */
 .live-circuits-svg {
@@ -1481,7 +1507,9 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
   opacity: 0;
   transform: translateY(12px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
   pointer-events: none;
   z-index: 25;
 }
@@ -1576,10 +1604,15 @@
 }
 
 @keyframes number-pulse {
-  0% { opacity: 0.15; transform: scale(0.98); }
-  100% { opacity: 0.45; transform: scale(1.02); }
+  0% {
+    opacity: 0.15;
+    transform: scale(0.98);
+  }
+  100% {
+    opacity: 0.45;
+    transform: scale(1.02);
+  }
 }
-
 
 /* THUNDER CLIMAX & BOOM EXPLOSION */
 .thunder-climax-container {
@@ -1601,7 +1634,9 @@
 .lightning-bolt {
   position: absolute;
   background: #ffffff;
-  box-shadow: 0 0 18px #06b6d4, 0 0 35px #e5a93c;
+  box-shadow:
+    0 0 18px #06b6d4,
+    0 0 35px #e5a93c;
   opacity: 0.85;
 }
 
@@ -1646,8 +1681,15 @@
 }
 
 @keyframes arc-flicker {
-  0%, 100% { opacity: 0.9; transform: scaleY(1); }
-  50% { opacity: 0.3; transform: scaleY(0.7); }
+  0%,
+  100% {
+    opacity: 0.9;
+    transform: scaleY(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scaleY(0.7);
+  }
 }
 
 /* Central Thunder Core */
@@ -1660,7 +1702,9 @@
   height: 110px;
   border-radius: 9999px;
   background: radial-gradient(circle, #e5a93c 20%, #f59e0b 60%, transparent 85%);
-  box-shadow: 0 0 60px #e5a93c, 0 0 120px #06b6d4;
+  box-shadow:
+    0 0 60px #e5a93c,
+    0 0 120px #06b6d4;
   z-index: 60;
 }
 
@@ -1679,11 +1723,15 @@
 @keyframes thunder-charge {
   0% {
     transform: scale(0.92);
-    box-shadow: 0 0 40px #e5a93c, 0 0 80px #06b6d4;
+    box-shadow:
+      0 0 40px #e5a93c,
+      0 0 80px #06b6d4;
   }
   100% {
     transform: scale(1.15);
-    box-shadow: 0 0 90px #ffffff, 0 0 160px #e5a93c;
+    box-shadow:
+      0 0 90px #ffffff,
+      0 0 160px #e5a93c;
   }
 }
 
@@ -1723,7 +1771,9 @@
   position: absolute;
   border-radius: 9999px;
   border: 4px solid #ffffff;
-  box-shadow: 0 0 40px #e5a93c, inset 0 0 40px #06b6d4;
+  box-shadow:
+    0 0 40px #e5a93c,
+    inset 0 0 40px #06b6d4;
   animation: shockwave-expand 0.95s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
 }
 
@@ -1838,7 +1888,9 @@
   border: 1px solid rgba(229, 169, 60, 0.28);
   border-radius: 9999px;
   backdrop-filter: blur(16px);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(229, 169, 60, 0.12);
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.7),
+    0 0 20px rgba(229, 169, 60, 0.12);
 }
 
 .dock-left {

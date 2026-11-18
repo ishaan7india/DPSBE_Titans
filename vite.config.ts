@@ -5,8 +5,10 @@ import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import tsConfigPaths from "vite-tsconfig-paths";
 
+const base = process.env.BASE_URL || (process.env.GITHUB_PAGES ? "/DPSBE_Titans/" : "/");
+
 export default defineConfig({
-  base: "/DPSBE_Titans/",
+  base,
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),

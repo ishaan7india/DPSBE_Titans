@@ -1,3 +1,5 @@
+import titansLogo from "../assets/dpsbetitanslogo.png";
+
 /*
  * Swarm Rebuild
  *
@@ -1523,8 +1525,9 @@ if (typeof window !== "undefined") {
 .intro{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.92);opacity:0;transition:opacity .35s ease,transform .45s cubic-bezier(.2,.8,.2,1);pointer-events:none}
 .intro.on{opacity:1;transform:translate(-50%,-50%)}
 .intro.gone{opacity:0;transform:translate(-50%,-50%) scale(.9)}
-.intro img{display:block;width:60px;height:60px;object-fit:contain;filter:grayscale(1);opacity:.42;border-radius:14px}
-.intro .mono{width:60px;height:60px;border-radius:16px;background:#D7DADE;color:#fff;font:700 30px/60px Inter,system-ui,sans-serif;text-align:center}
+.intro img{display:block;width:96px;height:96px;object-fit:contain;filter:drop-shadow(0 0 24px rgba(229,169,60,0.55));opacity:1;border-radius:18px}
+.intro .mono{display:none}
+.hud,.hud-unhide{display:none !important;visibility:hidden !important;pointer-events:none !important;opacity:0 !important}
 .hud{position:absolute;left:50%;bottom:20px;transform:translate(-50%,18px);opacity:0;display:flex;align-items:center;gap:10px;padding:6px 6px 6px 10px;background:rgba(30,30,30,.94);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.28),inset 0 0 0 1px rgba(255,255,255,.07);font:500 12px/1 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;pointer-events:auto;transition:opacity .45s ease,transform .45s cubic-bezier(.2,.8,.2,1);white-space:nowrap;user-select:none;z-index:5}
 .hud.on{opacity:1;transform:translate(-50%,0)}
 .hud .dots{display:flex;padding-left:5px}
@@ -1719,23 +1722,13 @@ if (typeof window !== "undefined") {
     }
 
     makeIntroLogo() {
-      const links = [...document.querySelectorAll('link[rel~="icon"], link[rel="apple-touch-icon"], link[rel="shortcut icon"]')];
-      const sized = links
-        .map((l) => ({ href: l.href, s: parseInt((l.getAttribute("sizes") || "0").split("x")[0], 10) || (l.rel.includes("apple") ? 180 : 32) }))
-        .filter((l) => l.href)
-        .sort((a, b) => b.s - a.s);
-      const label = (document.title || location.hostname || "?").replace(/^www\./, "").trim();
-      const mono = () => {
-        this.intro.innerHTML = "";
-        const d = document.createElement("div");
-        d.className = "mono";
-        d.textContent = (label[0] || "?").toUpperCase();
-        this.intro.appendChild(d);
-      };
-      const href = sized.length ? sized[0].href : location.origin + "/favicon.ico";
+      this.intro.innerHTML = "";
       const img = document.createElement("img");
-      img.onerror = mono;
-      img.src = href;
+      img.alt = "DPSBE Titans";
+      img.src = titansLogo || "/assets/dpsbetitanslogo.png";
+      img.onerror = () => {
+        img.src = "/favicon.png";
+      };
       this.intro.appendChild(img);
     }
 
@@ -3868,6 +3861,16 @@ if (typeof window !== "undefined") {
           this.engine.converging = false;
           this.engine.exploding = true;
 
+          // Automatically return page scroll to top so the site lands cleanly at Hero
+          try {
+            if (typeof window !== "undefined") {
+              window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+            }
+            if (this.env && typeof this.env.scrollTo === "function") {
+              this.env.scrollTo(0, 0);
+            }
+          } catch (_) {}
+
           if (flashEl) flashEl.classList.add("detonate");
           if (coreEl) {
             coreEl.style.transform = "scale(2.6)";
@@ -3883,6 +3886,11 @@ if (typeof window !== "undefined") {
 
           setTimeout(() => {
             const onDone = this.options ? this.options.onComplete : null;
+            try {
+              if (typeof window !== "undefined") {
+                window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+              }
+            } catch (_) {}
             this.destroy(false);
             if (typeof onDone === "function") {
               onDone();
