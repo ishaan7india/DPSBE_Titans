@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BuildRouteImport } from './routes/build'
+import { Route as LogoRouteImport } from './routes/logo'
 import { Route as MediaRouteImport } from './routes/media'
 import { Route as RobotRouteImport } from './routes/robot'
 import { Route as SeasonRouteImport } from './routes/season'
@@ -24,6 +25,11 @@ const IndexRoute = IndexRouteImport.update({
 const BuildRoute = BuildRouteImport.update({
   id: '/build',
   path: '/build',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LogoRoute = LogoRouteImport.update({
+  id: '/logo',
+  path: '/logo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MediaRoute = MediaRouteImport.update({
@@ -50,6 +56,7 @@ const TeamRoute = TeamRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/build': typeof BuildRoute
+  '/logo': typeof LogoRoute
   '/media': typeof MediaRoute
   '/robot': typeof RobotRoute
   '/season': typeof SeasonRoute
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/build': typeof BuildRoute
+  '/logo': typeof LogoRoute
   '/media': typeof MediaRoute
   '/robot': typeof RobotRoute
   '/season': typeof SeasonRoute
@@ -67,6 +75,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/build': typeof BuildRoute
+  '/logo': typeof LogoRoute
   '/media': typeof MediaRoute
   '/robot': typeof RobotRoute
   '/season': typeof SeasonRoute
@@ -74,15 +83,25 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/build' | '/media' | '/robot' | '/season' | '/team'
+  fullPaths:
+    '/' | '/build' | '/logo' | '/media' | '/robot' | '/season' | '/team'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/build' | '/media' | '/robot' | '/season' | '/team'
-  id: '__root__' | '/' | '/build' | '/media' | '/robot' | '/season' | '/team'
+  to: '/' | '/build' | '/logo' | '/media' | '/robot' | '/season' | '/team'
+  id:
+    | '__root__'
+    | '/'
+    | '/build'
+    | '/logo'
+    | '/media'
+    | '/robot'
+    | '/season'
+    | '/team'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BuildRoute: typeof BuildRoute
+  LogoRoute: typeof LogoRoute
   MediaRoute: typeof MediaRoute
   RobotRoute: typeof RobotRoute
   SeasonRoute: typeof SeasonRoute
@@ -103,6 +122,13 @@ declare module '@tanstack/react-router' {
       path: '/build'
       fullPath: '/build'
       preLoaderRoute: typeof BuildRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/logo': {
+      id: '/logo'
+      path: '/logo'
+      fullPath: '/logo'
+      preLoaderRoute: typeof LogoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/media': {
@@ -139,6 +165,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BuildRoute: BuildRoute,
+  LogoRoute: LogoRoute,
   MediaRoute: MediaRoute,
   RobotRoute: RobotRoute,
   SeasonRoute: SeasonRoute,

@@ -46,11 +46,13 @@ import { seasonPlanSlides } from "@/data/seasonPlan";
 import { Button } from "@/components/ui/button";
 import { AgentBuildOverlay } from "./AgentBuildOverlay";
 import { SeasonRoadmapSlideshow } from "./SeasonRoadmapSlideshow";
+import { LogoStory } from "./LogoStory";
 
 const instagram = "https://instagram.com/dpsbe_titans";
 const youtube = "https://youtube.com/@dpsbe_titans";
 const navItems = [
   ["HOME", "/"],
+  ["LOGO", "/logo"],
   ["TEAM", "/team"],
   ["ROBOT", "/robot"],
   ["BUILD", "/build"],
@@ -127,7 +129,7 @@ function Navbar() {
   }, [open]);
   return (
     <header className={`site-nav ${scrolled || open ? "site-nav-solid" : ""}`}>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 shrink-0">
         <Link to="/" className="brand-button" aria-label="Go to home">
           <img src={logoAsset} alt="" className="brand-logo" />
           <span>
@@ -136,19 +138,22 @@ function Navbar() {
             <span className="text-primary">#174</span>
           </span>
         </Link>
-        <span className="hidden sm:inline-block h-6 w-px bg-white/20" />
-        <div className="hidden sm:flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-2.5 py-1">
+        <span className="hidden xl:inline-block h-6 w-px bg-white/20" />
+        <div className="hidden xl:flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-2.5 py-1">
           <img
             src={nrlLogo}
             alt="National Robotics League"
-            className="h-3.5 w-auto object-contain"
+            className="h-4 sm:h-5 w-auto object-contain"
           />
           <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
             2026 NRL • HYPERDRIVE
           </span>
         </div>
       </div>
-      <nav className="hidden items-center gap-7 lg:flex" aria-label="Main navigation">
+      <nav
+        className="hidden items-center gap-3.5 md:gap-4 xl:gap-6 2xl:gap-7 lg:flex"
+        aria-label="Main navigation"
+      >
         {navItems.map(([label, path]) => (
           <Link
             to={path}
@@ -163,7 +168,7 @@ function Navbar() {
         href={instagram}
         target="_blank"
         rel="noreferrer"
-        className="nav-cta hidden lg:inline-flex"
+        className="nav-cta hidden lg:inline-flex shrink-0"
       >
         INSTAGRAM <ArrowUpRight size={15} />
       </a>
@@ -217,11 +222,11 @@ function Hero() {
       <img src={logoAsset} alt="" className="hero-emblem" aria-hidden="true" />
       <div className="hero-content">
         <div className="flex items-center justify-between border-b border-border pb-4 text-[0.65rem] font-semibold tracking-[0.2em]">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <img
               src={nrlLogo}
               alt="National Robotics League"
-              className="h-4 w-auto object-contain inline-block"
+              className="h-5 sm:h-6 w-auto object-contain inline-block"
             />
             <span>2026 NRL SEASON // GAME: HYPERDRIVE</span>
           </div>
@@ -310,7 +315,7 @@ function Stats() {
 function Team() {
   return (
     <section id="team" className="section-light px-page py-section">
-      <SectionLabel>02 — THE TEAM</SectionLabel>
+      <SectionLabel>03 — THE TEAM</SectionLabel>
       <EditorialTitle lines={["MEET", "THE TITANS."]} light />
       <div className="mt-16 grid border-l border-t border-ink-border sm:grid-cols-2 lg:grid-cols-3">
         {teamMembers.map((member) => (
@@ -371,7 +376,7 @@ function Robot() {
   return (
     <section id="robot" className="bg-background py-section">
       <div className="px-page">
-        <SectionLabel>03 — THE MACHINE: KRONOS #174</SectionLabel>
+        <SectionLabel>04 — THE MACHINE: KRONOS #174</SectionLabel>
         <EditorialTitle lines={["MEET", "KRONOS."]} />
       </div>
       <div className="robot-visual mt-14">
@@ -446,7 +451,7 @@ function BuildJourney() {
   const [active, setActive] = useState<number | null>(null);
   return (
     <section id="build" className="bg-background px-page py-section">
-      <SectionLabel>04 — PROCESS</SectionLabel>
+      <SectionLabel>05 — PROCESS</SectionLabel>
       <div className="grid gap-12 lg:grid-cols-[.8fr_1.2fr]">
         <div>
           <EditorialTitle lines={["FROM", "IDEA", "TO", "ARENA."]} />
@@ -496,7 +501,7 @@ function BuildJourney() {
 function Season() {
   return (
     <section id="season" className="bg-background px-page py-section">
-      <SectionLabel>05 — 2026 NRL ROADMAP</SectionLabel>
+      <SectionLabel>06 — 2026 NRL ROADMAP</SectionLabel>
       <EditorialTitle lines={["THE", "2026", "SEASON."]} />
 
       <p className="mt-6 max-w-3xl text-sm sm:text-base text-muted-foreground leading-relaxed">
@@ -637,7 +642,7 @@ function Game() {
 function Arena() {
   return (
     <section className="section-dark px-page py-section">
-      <SectionLabel>06 — MATCH ROLES</SectionLabel>
+      <SectionLabel>03.2 — MATCH ROLES</SectionLabel>
       <EditorialTitle lines={["IN THE", "ARENA."]} />
       <div className="mt-14 grid border-l border-t border-border md:grid-cols-3">
         {arenaRoles.map((person, index) => (
@@ -682,7 +687,7 @@ function BuildLog() {
   ];
   return (
     <section className="section-light px-page py-section">
-      <SectionLabel>07 — ENGINEERING JOURNAL</SectionLabel>
+      <SectionLabel>05.2 — ENGINEERING JOURNAL</SectionLabel>
       <EditorialTitle lines={["THE", "BUILD", "LOG."]} light />
       <div className="mt-14 flex flex-wrap gap-x-5 border-y border-ink-border py-4">
         {categories.map((category) => (
@@ -824,6 +829,17 @@ const mediaGalleryItems: MediaItem[] = [
     src: slide.image,
     thumbnail: slide.image,
   })),
+  {
+    id: "titans-first-release-teaser",
+    type: "video" as const,
+    title: "FIRST OFFICIAL TEASER RELEASE",
+    subtitle: "The original launch teaser — where the DPSBE Titans 2026 season journey began",
+    badge: "FIRST POST • LAUNCH TEASER",
+    categories: ["ALL", "COMPETITION", "TEAM", "BEHIND THE SCENES"],
+    src: "/media/titans-first-release.mp4",
+    thumbnail: journeyBanner,
+    featured: false,
+  },
 ];
 
 function Media() {
@@ -846,7 +862,7 @@ function Media() {
 
   return (
     <section id="media" className="bg-background px-page py-section">
-      <SectionLabel>08 — MEDIA ARCHIVE</SectionLabel>
+      <SectionLabel>07 — MEDIA ARCHIVE</SectionLabel>
       <EditorialTitle lines={["INSIDE", "THE TITANS."]} />
       <div className="mt-12 flex flex-wrap gap-x-5 border-y border-border py-3">
         {mediaFilters.map((item) => (
@@ -1005,7 +1021,7 @@ function Highlights() {
 
   return (
     <section id="highlights" className="bg-background px-page py-section">
-      <SectionLabel>09 — SEASON ARCHIVE</SectionLabel>
+      <SectionLabel>06.2 — SEASON ARCHIVE</SectionLabel>
       <EditorialTitle lines={["SEASON", "HIGHLIGHTS."]} />
 
       <p className="mt-6 max-w-2xl text-sm sm:text-base text-muted-foreground leading-relaxed">
@@ -1273,7 +1289,7 @@ function Footer() {
   );
 }
 
-export type SitePage = "home" | "team" | "robot" | "build" | "season" | "media";
+export type SitePage = "home" | "team" | "robot" | "build" | "season" | "media" | "logo";
 
 export function SeasonSite({ page = "home" }: { page?: SitePage }) {
   const [introActive, setIntroActive] = useState(() => {
@@ -1305,8 +1321,10 @@ export function SeasonSite({ page = "home" }: { page?: SitePage }) {
   }, []);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    const nodes = document.querySelectorAll("main section, main article, .stat-block");
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    const nodes = document.querySelectorAll(
+      "main section:not(:first-child), main article, .stat-block",
+    );
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const observer = new IntersectionObserver(
       (entries) => {
@@ -1365,6 +1383,11 @@ export function SeasonSite({ page = "home" }: { page?: SitePage }) {
       <>
         <Media />
         <Social />
+      </>
+    ),
+    logo: (
+      <>
+        <LogoStory />
       </>
     ),
   };

@@ -84,7 +84,7 @@ const terminalLogs: TerminalLine[] = [
   {
     tag: "      ->",
     tagColor: "text-muted-foreground",
-    text: "Aariv (Mech) | Abhinav (Elec) | Swastik (Prog) | Mentor: Anjaneyulu",
+    text: "Aariv (Mech) | Abhinav (Elec) | Swastik (Prog) | Mentor: Sitali Nema",
     textColor: "text-accent/90 font-mono text-xs",
     delayMs: 15,
   },

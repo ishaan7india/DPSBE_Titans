@@ -53,9 +53,9 @@ export const hyperdriveGameDetails: HyperdriveGameField[] = [
   {
     code: "OUR STRATEGY",
     title: "RAPID CORE CYCLING & ENDGAME",
-    value: "KRONOS TACTICAL SYSTEM",
+    value: "2:30 HYPERDRIVE MASTER PLAN",
     description:
-      "Engineered for high-throughput ground intake, Star Pole scoring, coordinating Starburst multipliers with our Human Player, and securing high-value Space Station Balance points.",
+      "0:00–0:30 Initial Punch (Ridit collects initial cores & drops cleanly). 0:30–1:00 Payload Delivery & Starburst Activation (Supra & Ridit). 1:00–2:00 Core Cycling & Golden Core surge. 2:00–2:30 Space Station Docking lock.",
     badge: "TITANS STRATEGY",
   },
   {
