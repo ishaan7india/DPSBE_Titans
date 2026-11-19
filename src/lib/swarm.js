@@ -1675,15 +1675,7 @@ if (typeof window !== "undefined") {
   <button data-a="replay" hidden title="Wipe and rebuild again">Replay</button>
   <button data-a="close" class="x" title="Exit (Esc)">✕</button>
 </div>
-<button class="hud-unhide" title="Show controls (H)">Show controls</button>
-<div class="thunder-climax">
-  <div class="shockwave-flash"></div>
-  <div class="thunder-core">
-    <svg class="thunder-svg" viewBox="0 0 24 24" fill="currentColor">
-      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-    </svg>
-  </div>
-</div>`;
+<button class="hud-unhide" title="Show controls (H)">Show controls</button>`;
       const $ = (s) => root.querySelector(s);
       this.bg = $(".bg");
       this.under = $(".under");
@@ -3824,8 +3816,11 @@ if (typeof window !== "undefined") {
       if (this._climaxing || this.dead) return;
       this._climaxing = true;
       this.tour = false;
+
+      // Hide the HUD controls
       if (this.view && this.view.hud) {
         this.view.hud.classList.remove("on");
+        this.view.hud.style.transition = "opacity 0.25s ease";
         this.view.hud.style.opacity = "0";
         this.view.hud.style.pointerEvents = "none";
       }
@@ -3833,7 +3828,8 @@ if (typeof window !== "undefined") {
         this.view.unhideBtn.style.display = "none";
       }
 
-      // All cursors immediately converge towards the dead center of the screen
+      // 1. All agent cursors converge towards the dead center of the screen!
+      // Do NOT scroll yet -- maintain current viewport scroll so there is zero glitch
       this.engine.flocking = false;
       this.engine.converging = true;
 
@@ -3843,65 +3839,23 @@ if (typeof window !== "undefined") {
         }
       } catch (_) {}
 
-      const root = this.view ? this.view.root : null;
-      if (root) {
-        const climaxEl = root.querySelector(".thunder-climax");
-        const flashEl = root.querySelector(".shockwave-flash");
-        const coreEl = root.querySelector(".thunder-core");
-        if (climaxEl) climaxEl.classList.add("active", "charging");
+      // Allow cursors to swarm into the center for 550ms
+      setTimeout(() => {
+        // 2. Blast cursors outward as the core ignites
+        this.engine.converging = false;
+        this.engine.exploding = true;
 
-        setTimeout(() => {
-          try {
-            if (typeof window !== "undefined" && window.__titansSoundSystem) {
-              window.__titansSoundSystem.playThunderBoom();
-            }
-          } catch (_) {}
-
-          // Explode cursors outwards as the thunderbolt detonates
-          this.engine.converging = false;
-          this.engine.exploding = true;
-
-          // Automatically return page scroll to top so the site lands cleanly at Hero
-          try {
-            if (typeof window !== "undefined") {
-              window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-            }
-            if (this.env && typeof this.env.scrollTo === "function") {
-              this.env.scrollTo(0, 0);
-            }
-          } catch (_) {}
-
-          if (flashEl) flashEl.classList.add("detonate");
-          if (coreEl) {
-            coreEl.style.transform = "scale(2.6)";
-            coreEl.style.opacity = "0";
-            coreEl.style.transition = "transform .3s ease-out, opacity .3s ease-out";
-          }
-
-          setTimeout(() => {
-            if (this.view && this.view.host) {
-              this.view.host.style.setProperty("opacity", "0", "important");
-            }
-          }, 450);
-
-          setTimeout(() => {
-            const onDone = this.options ? this.options.onComplete : null;
-            try {
-              if (typeof window !== "undefined") {
-                window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-              }
-            } catch (_) {}
-            this.destroy(false);
-            if (typeof onDone === "function") {
-              onDone();
-            }
-          }, 850);
-        }, 520);
-      } else {
+        // Transition immediately into Part 3 (ThunderLogoClimax)
         const onDone = this.options ? this.options.onComplete : null;
-        this.destroy(false);
-        if (typeof onDone === "function") onDone();
-      }
+        if (typeof onDone === "function") {
+          onDone();
+        }
+
+        // Clean up swarm after handoff
+        setTimeout(() => {
+          this.destroy(false);
+        }, 300);
+      }, 550);
     }
 
     onComplete() {
@@ -3911,18 +3865,17 @@ if (typeof window !== "undefined") {
       const v = this.view;
       const workers = E.cursors.filter((c) => c.worked).length + E.retired;
       const secs = (E.endTime - E.startTime).toFixed(1);
-      v.status.innerHTML = `Rebuilt by <b>${workers}</b> agents in <b>${secs}s</b>`;
-      v.barFill.style.width = "100%";
-      v.dots.innerHTML = "";
-      v.root.querySelector('[data-a="live"]').hidden = false;
-      v.root.querySelector('[data-a="replay"]').hidden = false;
-      v.root.querySelector('[data-a="tour"]').hidden = true;
-      v.root.querySelector('[data-a="speed"]').hidden = true;
+      if (v && v.status) {
+        v.status.innerHTML = `Rebuilt by <b>${workers}</b> agents in <b>${secs}s</b>`;
+      }
+      if (v && v.barFill) {
+        v.barFill.style.width = "100%";
+      }
       this.tour = false;
-      // Automatically trigger the thunder explosion climax
+      // Trigger cursor convergence to center
       setTimeout(() => {
         if (!this.dead) this.triggerClimax();
-      }, 1000);
+      }, 600);
     }
 
     destroy(reveal) {

@@ -1166,7 +1166,7 @@ function Highlights() {
 function Achievements() {
   return (
     <section className="bg-surface px-page py-section">
-      <SectionLabel>10 — TOURNAMENT CAMPAIGN</SectionLabel>
+      <SectionLabel>06.2 — TOURNAMENT CAMPAIGN</SectionLabel>
       <EditorialTitle lines={["ROAD TO", "NATIONALS."]} />
 
       <div className="mt-12 space-y-4">
@@ -1200,7 +1200,7 @@ function Achievements() {
 function Social() {
   return (
     <section className="section-light px-page py-section">
-      <SectionLabel>11 — OFFICIAL CHANNELS</SectionLabel>
+      <SectionLabel>07.2 — OFFICIAL CHANNELS</SectionLabel>
       <EditorialTitle lines={["FOLLOW", "THE", "TITANS."]} light />
       <div className="mt-14 grid border-l border-t border-ink-border lg:grid-cols-2">
         <a className="social-block" href={instagram} target="_blank" rel="noreferrer">
@@ -1240,56 +1240,6 @@ function FinalCTA() {
         <EditorialTitle lines={["SEE YOU", "IN THE", "ARENA."]} />
       </div>
     </section>
-  );
-}
-
-function VisitorCounter() {
-  const iframeSrcDoc = `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <base target="_blank">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: transparent;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-    a {
-      font-size: 10px;
-      color: rgba(255, 255, 255, 0.4);
-      text-decoration: none;
-    }
-    img.counterimg {
-      border: 0;
-      display: inline-block;
-      vertical-align: middle;
-      filter: drop-shadow(0 0 6px rgba(229, 169, 60, 0.4));
-    }
-  </style>
-</head>
-<body>
-  <a href="https://www.acadoo.de/leistungen/ghostwriter-doktorarbeit/">Doktorarbeit Coaching</a>
-  <script type="text/javascript" src="https://www.freevisitorcounters.com/auth.php?id=14780113ce81aa8f09de105bf2d41d75f46f949d"></script>
-  <script type="text/javascript" src="https://www.freevisitorcounters.com/en/home/counter/1709855/t/9"></script>
-</body>
-</html>`;
-
-  return (
-    <div className="flex flex-col items-center justify-center py-2">
-      <iframe
-        title="Visitor Counter"
-        srcDoc={iframeSrcDoc}
-        className="w-[180px] h-[36px] border-0 overflow-hidden bg-transparent"
-        scrolling="no"
-      />
-    </div>
   );
 }
 
@@ -1364,9 +1314,8 @@ function Footer() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-4 pt-6 text-[.65rem] font-semibold tracking-[.15em] text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-2 pt-6 text-[.65rem] font-semibold tracking-[.15em] text-muted-foreground sm:flex-row sm:justify-between">
         <span>BUILT BY THE TITANS • NATIONAL ROBOTICS LEAGUE 2026</span>
-        <VisitorCounter />
         <span>© 2026 DPSBE TITANS</span>
       </div>
     </footer>
