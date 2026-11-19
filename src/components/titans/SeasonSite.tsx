@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link, useRouterState } from "@tanstack/react-router";
 import logoAsset from "@/assets/dpsbetitanslogo.png";
 import {
@@ -790,46 +791,6 @@ const mediaGalleryItems: MediaItem[] = [
     thumbnail: journeyBanner,
   },
   {
-    id: "precision-chassis",
-    type: "image",
-    title: "PRECISION ROBOTICS ENGINEERING",
-    subtitle: "Drivetrain architecture, gearing & structural fabrication detail",
-    badge: "ROBOT MECHANICS",
-    categories: ["ALL", "ROBOT", "BUILD"],
-    src: detailImage,
-    thumbnail: detailImage,
-  },
-  {
-    id: "arena-trials",
-    type: "image",
-    title: "ROBOT ARENA TESTING & SUBSYSTEMS",
-    subtitle: "Autonomous routines and teleoperated scoring cycle trials",
-    badge: "ARENA TESTING",
-    categories: ["ALL", "ROBOT", "TESTING"],
-    src: heroImage,
-    thumbnail: heroImage,
-  },
-  ...teamMembers.map((member) => ({
-    id: `member-${member.number}`,
-    type: "image" as const,
-    title: `${member.name} • #${member.number}`,
-    subtitle: `${member.role} — ${member.grade}`,
-    badge: "CREW MEMBER",
-    categories: ["ALL", "TEAM"],
-    src: member.image || posterImg,
-    thumbnail: member.image || posterImg,
-  })),
-  ...seasonPlanSlides.map((slide) => ({
-    id: `roadmap-slide-${slide.slideNumber}`,
-    type: "image" as const,
-    title: `${slide.phaseCode} • ${slide.title}`,
-    subtitle: `${slide.subtitle} (${slide.dateRange})`,
-    badge: slide.statusBadge,
-    categories: ["ALL", "ROADMAP", "BUILD", "COMPETITION"],
-    src: slide.image,
-    thumbnail: slide.image,
-  })),
-  {
     id: "titans-first-release-teaser",
     type: "video" as const,
     title: "FIRST OFFICIAL TEASER RELEASE",
@@ -845,6 +806,8 @@ const mediaGalleryItems: MediaItem[] = [
 function Media() {
   const [filter, setFilter] = useState("ALL");
   const [activeMedia, setActiveMedia] = useState<MediaItem | null>(null);
+  const [playingVideoId, setPlayingVideoId] = useState<string | null>(null);
+  const videoCardRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   useEffect(() => {
     if (!activeMedia) return;
@@ -859,6 +822,22 @@ function Media() {
     filter === "ALL"
       ? mediaGalleryItems
       : mediaGalleryItems.filter((item) => item.categories.includes(filter));
+
+  const handleMediaCardClick = (item: MediaItem) => {
+    if (item.type === "video") {
+      // Inline playback: Start playing video right inside the card where clicked!
+      setPlayingVideoId(item.id);
+      // Ensure the card is smoothly centered in view
+      setTimeout(() => {
+        const el = videoCardRefs.current[item.id];
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+      }, 50);
+    } else {
+      setActiveMedia(item);
+    }
+  };
 
   return (
     <section id="media" className="bg-background px-page py-section">
@@ -901,117 +880,171 @@ function Media() {
       </div>
 
       <div className="media-grid mt-10">
-        {filteredItems.map((item) => (
-          <div
-            key={item.id}
-            className={`media-card ${item.featured ? "media-card-featured" : ""}`}
-            onClick={() => setActiveMedia(item)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                setActiveMedia(item);
-              }
-            }}
-            aria-label={`View ${item.title}`}
-          >
-            <div className="media-card-thumb-wrap">
-              <img
-                src={item.thumbnail}
-                alt={item.title}
-                loading="lazy"
-                className="media-card-thumb"
-              />
-              <span className="media-card-type-tag">
-                {item.type === "video" ? (
-                  <>
-                    <Film size={12} className="text-primary" />
-                    <span>VIDEO</span>
-                  </>
+        {filteredItems.map((item) => {
+          const isVideoPlaying = item.type === "video" && playingVideoId === item.id;
+
+          return (
+            <div
+              key={item.id}
+              ref={(el) => {
+                videoCardRefs.current[item.id] = el;
+              }}
+              className={`media-card ${item.featured ? "media-card-featured" : ""}`}
+              onClick={() => {
+                if (!isVideoPlaying) {
+                  handleMediaCardClick(item);
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handleMediaCardClick(item);
+                }
+              }}
+              aria-label={`View ${item.title}`}
+            >
+              <div className="media-card-thumb-wrap">
+                {isVideoPlaying ? (
+                  <div
+                    className="relative w-full h-full bg-black flex items-center justify-center"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <video
+                      src={item.src}
+                      controls
+                      autoPlay
+                      playsInline
+                      className="w-full h-full object-contain bg-black"
+                    />
+                    <div className="absolute top-2 right-2 z-20 flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveMedia(item);
+                        }}
+                        className="rounded bg-black/80 hover:bg-accent hover:text-black text-white p-1.5 border border-white/20 transition-all shadow-md"
+                        title="Expand to Fullscreen Modal"
+                      >
+                        <Maximize2 size={13} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setPlayingVideoId(null);
+                        }}
+                        className="rounded bg-black/80 hover:bg-rose-500 hover:text-white text-white p-1.5 border border-white/20 transition-all shadow-md"
+                        title="Close Player"
+                      >
+                        <X size={13} />
+                      </button>
+                    </div>
+                  </div>
                 ) : (
                   <>
-                    <Maximize2 size={12} className="text-primary" />
-                    <span>IMAGE</span>
+                    <img
+                      src={item.thumbnail}
+                      alt={item.title}
+                      loading="lazy"
+                      className="media-card-thumb"
+                    />
+                    <span className="media-card-type-tag">
+                      {item.type === "video" ? (
+                        <>
+                          <Film size={12} className="text-primary" />
+                          <span>VIDEO</span>
+                        </>
+                      ) : (
+                        <>
+                          <Maximize2 size={12} className="text-primary" />
+                          <span>IMAGE</span>
+                        </>
+                      )}
+                    </span>
+                    {item.type === "video" && (
+                      <div className="media-card-play-overlay">
+                        <div className="media-card-play-icon">
+                          <Play size={24} fill="currentColor" />
+                        </div>
+                      </div>
+                    )}
                   </>
                 )}
-              </span>
-              {item.type === "video" && (
-                <div className="media-card-play-overlay">
-                  <div className="media-card-play-icon">
-                    <Play size={24} fill="currentColor" />
-                  </div>
-                </div>
-              )}
+              </div>
+              <div className="media-card-info">
+                <span className="media-card-badge">{item.badge}</span>
+                <h3 className="media-card-title">{item.title}</h3>
+                <p className="media-card-sub">{item.subtitle}</p>
+              </div>
             </div>
-            <div className="media-card-info">
-              <span className="media-card-badge">{item.badge}</span>
-              <h3 className="media-card-title">{item.title}</h3>
-              <p className="media-card-sub">{item.subtitle}</p>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      {activeMedia && (
-        <div
-          className="media-lightbox"
-          role="dialog"
-          aria-modal="true"
-          aria-label={activeMedia.title}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setActiveMedia(null);
-          }}
-        >
-          <Button
-            variant="icon"
-            onClick={() => setActiveMedia(null)}
-            aria-label="Close media preview"
-            className="absolute right-6 top-6 z-50 bg-background/80 hover:bg-background border border-border"
+      {activeMedia &&
+        createPortal(
+          <div
+            className="media-lightbox"
+            role="dialog"
+            aria-modal="true"
+            aria-label={activeMedia.title}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setActiveMedia(null);
+            }}
           >
-            <X size={20} />
-          </Button>
+            <Button
+              variant="icon"
+              onClick={() => setActiveMedia(null)}
+              aria-label="Close media preview"
+              className="absolute right-6 top-6 z-50 bg-background/80 hover:bg-background border border-border"
+            >
+              <X size={20} />
+            </Button>
 
-          <div className="media-lightbox-content">
-            {activeMedia.type === "video" ? (
-              <video
-                src={activeMedia.src}
-                controls
-                autoPlay
-                playsInline
-                className="media-lightbox-media bg-black"
-              />
-            ) : (
-              <img
-                src={activeMedia.src}
-                alt={activeMedia.title}
-                className="media-lightbox-media bg-black"
-              />
-            )}
-            <div className="media-lightbox-footer">
-              <div>
-                <span className="font-mono text-[0.62rem] font-bold tracking-widest text-primary">
-                  {activeMedia.badge}
-                </span>
-                <h4 className="text-base font-bold text-foreground sm:text-lg">
-                  {activeMedia.title}
-                </h4>
-                <p className="font-mono text-xs text-muted-foreground">{activeMedia.subtitle}</p>
+            <div className="media-lightbox-content">
+              {activeMedia.type === "video" ? (
+                <video
+                  src={activeMedia.src}
+                  controls
+                  autoPlay
+                  playsInline
+                  className="media-lightbox-media bg-black"
+                />
+              ) : (
+                <img
+                  src={activeMedia.src}
+                  alt={activeMedia.title}
+                  className="media-lightbox-media bg-black"
+                />
+              )}
+              <div className="media-lightbox-footer">
+                <div>
+                  <span className="font-mono text-[0.62rem] font-bold tracking-widest text-primary">
+                    {activeMedia.badge}
+                  </span>
+                  <h4 className="text-base font-bold text-foreground sm:text-lg">
+                    {activeMedia.title}
+                  </h4>
+                  <p className="font-mono text-xs text-muted-foreground">{activeMedia.subtitle}</p>
+                </div>
+                <a
+                  href={activeMedia.src}
+                  target="_blank"
+                  rel="noreferrer"
+                  download={activeMedia.type === "video" ? "titans-video.mp4" : undefined}
+                  className="inline-flex items-center gap-2 rounded border border-border bg-primary px-3 py-2 font-mono text-xs font-bold text-primary-foreground transition-colors hover:bg-primary/90"
+                >
+                  {activeMedia.type === "video" ? "DOWNLOAD VIDEO" : "VIEW FULL SIZE"}
+                  <ArrowUpRight size={14} />
+                </a>
               </div>
-              <a
-                href={activeMedia.src}
-                target="_blank"
-                rel="noreferrer"
-                download={activeMedia.type === "video" ? "titans-season-reel.mp4" : undefined}
-                className="inline-flex items-center gap-2 rounded border border-border bg-primary px-3 py-2 font-mono text-xs font-bold text-primary-foreground transition-colors hover:bg-primary/90"
-              >
-                {activeMedia.type === "video" ? "DOWNLOAD VIDEO" : "VIEW FULL SIZE"}
-                <ArrowUpRight size={14} />
-              </a>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </section>
   );
 }
@@ -1210,6 +1243,56 @@ function FinalCTA() {
   );
 }
 
+function VisitorCounter() {
+  const iframeSrcDoc = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base target="_blank">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    a {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.4);
+      text-decoration: none;
+    }
+    img.counterimg {
+      border: 0;
+      display: inline-block;
+      vertical-align: middle;
+      filter: drop-shadow(0 0 6px rgba(229, 169, 60, 0.4));
+    }
+  </style>
+</head>
+<body>
+  <a href="https://www.acadoo.de/leistungen/ghostwriter-doktorarbeit/">Doktorarbeit Coaching</a>
+  <script type="text/javascript" src="https://www.freevisitorcounters.com/auth.php?id=14780113ce81aa8f09de105bf2d41d75f46f949d"></script>
+  <script type="text/javascript" src="https://www.freevisitorcounters.com/en/home/counter/1709855/t/9"></script>
+</body>
+</html>`;
+
+  return (
+    <div className="flex flex-col items-center justify-center py-2">
+      <iframe
+        title="Visitor Counter"
+        srcDoc={iframeSrcDoc}
+        className="w-[180px] h-[36px] border-0 overflow-hidden bg-transparent"
+        scrolling="no"
+      />
+    </div>
+  );
+}
+
 function Footer() {
   return (
     <footer className="bg-background px-page py-12">
@@ -1281,8 +1364,9 @@ function Footer() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-2 pt-6 text-[.65rem] font-semibold tracking-[.15em] text-muted-foreground sm:flex-row sm:justify-between">
+      <div className="flex flex-col gap-4 pt-6 text-[.65rem] font-semibold tracking-[.15em] text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
         <span>BUILT BY THE TITANS • NATIONAL ROBOTICS LEAGUE 2026</span>
+        <VisitorCounter />
         <span>© 2026 DPSBE TITANS</span>
       </div>
     </footer>

@@ -1,11 +1,5 @@
 import { useState, useCallback } from "react";
 import logoAsset from "@/assets/dpsbetitanslogo.png";
-import ishaanImg from "@/assets/team/ishaan.jpg";
-import riditImg from "@/assets/team/ridit.jpg";
-import supratikImg from "@/assets/team/supratik.jpg";
-import aarivImg from "@/assets/team/aariv.jpg";
-import abhinavImg from "@/assets/team/abhinav.jpg";
-import swastikImg from "@/assets/team/swastik.jpg";
 import { soundSystem } from "@/lib/sound-effects";
 import {
   Zap,
@@ -14,138 +8,89 @@ import {
   Shield,
   Compass,
   ArrowRight,
-  Flame,
-  Cpu,
   Layers,
   Activity,
   CheckCircle2,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
-interface LogoVertex {
+interface EmblemCorner {
   index: number;
   angle: number; // 0, 60, 120, 180, 240, 300
   title: string;
-  name: string;
-  role: string;
-  grade: string;
-  image: string;
+  cornerName: string;
+  meaning: string;
   discipline: string;
-  vectorRole: string;
-  matchContribution: string;
   symbolism: string;
-  color: string;
-  // Polar coordinate on 500x500 SVG relative to center (250, 250) with radius R=170
+  // Polar coordinates on 500x500 SVG relative to center (250, 250) with radius R=170
   svgX: number;
   svgY: number;
 }
 
-const logoVertices: LogoVertex[] = [
+const emblemCorners: EmblemCorner[] = [
   {
     index: 0,
     angle: 0,
-    title: "VERTEX 01 • APEX (0°)",
-    name: "Ishaan",
-    role: "Captain & Drive Strategist",
-    grade: "Grade 10",
-    image: ishaanImg,
-    discipline: "STRATEGIC LEADERSHIP & MATCH COMMAND",
-    vectorRole: "The Forward Vector",
-    matchContribution:
-      "Directs real-time alliance coordination, calls defensive rotations, manages the 2:30 match clock, and dictates autonomous scoring priorities.",
-    symbolism:
-      "The top-most apex pointing directly ahead — representing clear vision, mission discipline, and unified tournament direction.",
-    color: "from-amber-400 to-yellow-500",
+    title: "CORNER 01 • APEX (0°)",
+    cornerName: "The Forward Vector",
+    discipline: "STRATEGIC VISION & COMMAND",
+    meaning: "Represents the team's forward momentum, mission clarity, and relentless drive toward the competition objective.",
+    symbolism: "The top-most apex pointing directly ahead — representing clear vision, strategic foresight, and unified team direction.",
     svgX: 250,
     svgY: 85,
   },
   {
     index: 1,
     angle: 60,
-    title: "VERTEX 02 • TELEOP (60°)",
-    name: "Ridit Mittal",
-    role: "Robot Driver",
-    grade: "Grade 10",
-    image: riditImg,
-    discipline: "PRECISION ARENA TELEOPERATION",
-    vectorRole: "The Dynamic Drive Vector",
-    matchContribution:
-      "Controls Kronos's 4WD drivetrain under full speed, threading tight field obstacles, executing micro-adjustments for claw payload capture, and defending lanes.",
-    symbolism:
-      "The speed vector — turning theoretical mechanical torque into tactical millisecond maneuvers across the Hyperdrive arena surface.",
-    color: "from-amber-500 to-orange-500",
+    title: "CORNER 02 • MOBILITY (60°)",
+    cornerName: "The Teleoperated Drive Vector",
+    discipline: "ARENA MOBILITY & AGILITY",
+    meaning: "Represents high-speed responsive maneuvering, swift obstacle avoidance, and tactical repositioning on the arena floor.",
+    symbolism: "The speed vector — turning theoretical mechanical potential into fluid, precise real-time motion across the field.",
     svgX: 395,
     svgY: 168,
   },
   {
     index: 2,
     angle: 120,
-    title: "VERTEX 03 • CATALYST (120°)",
-    name: "Supratik Senapati",
-    role: "Human Player",
-    grade: "Grade 10",
-    image: supratikImg,
-    discipline: "ARENA OPERATIONS & PAYLOAD TIMING",
-    vectorRole: "The Field Supply Vector",
-    matchContribution:
-      "Manages the alliance depot station, pre-loading scoring elements, timing the release of match Payloads, and initiating high-multiplier STARBURST bonus periods.",
-    symbolism:
-      "The catalyst vector — bridging the human strategy zone outside the perimeter with the automated robot inside the field boundary.",
-    color: "from-orange-500 to-amber-400",
+    title: "CORNER 03 • CATALYST (120°)",
+    cornerName: "The Collaboration Vector",
+    discipline: "HUMAN-ROBOT INTEGRATION",
+    meaning: "Represents the seamless bridge between human tactical coordination outside the perimeter and the robotic machine inside the arena.",
+    symbolism: "The catalyst vector — timing field payloads, coordinating team strategy, and initiating match-winning scoring phases.",
     svgX: 395,
     svgY: 332,
   },
   {
     index: 3,
     angle: 180,
-    title: "VERTEX 04 • FOUNDATION (180°)",
-    name: "Kumar Aariv",
-    role: "Mechanical",
-    grade: "Grade 9",
-    image: aarivImg,
-    discipline: "STRUCTURAL RIGIDITY & KINEMATICS",
-    vectorRole: "The Structural Anchor Vector",
-    matchContribution:
-      "Engineered Kronos's 4WD low-center-of-gravity chassis, CNC-milled structural ribs, high-traction knobby tread wheel geometry, and rigid servo claw linkages.",
-    symbolism:
-      "The bottom anchor — providing the bedrock stability and physical toughness without which high-velocity impacts would destroy the machine.",
-    color: "from-yellow-500 to-amber-500",
+    title: "CORNER 04 • FOUNDATION (180°)",
+    cornerName: "The Structural Anchor",
+    discipline: "MECHANICAL RIGIDITY & STRENGTH",
+    meaning: "Represents the physical bedrock, structural toughness, and durable chassis architecture that endures heavy arena collisions.",
+    symbolism: "The bottom anchor — grounding the team with physical reliability, balanced center-of-gravity, and uncompromising build quality.",
     svgX: 250,
     svgY: 415,
   },
   {
     index: 4,
     angle: 240,
-    title: "VERTEX 05 • POWER (240°)",
-    name: "Abhinav Mukund R",
-    role: "Electronics",
-    grade: "Grade 9",
-    image: abhinavImg,
-    discipline: "ELECTRICAL ARCHITECTURE & REGULATION",
-    vectorRole: "The Energy Distribution Vector",
-    matchContribution:
-      "Architected the 12V dual-bus battery power system, motor driver breakout modules, emergency master isolation switch, and clean noise-isolated wire harnesses.",
-    symbolism:
-      "The pulse vector — channeling stable current to high-stall motors and preventing brownouts during heavy contact collisions.",
-    color: "from-amber-400 to-yellow-400",
+    title: "CORNER 05 • POWER (240°)",
+    cornerName: "The Energy Distribution Vector",
+    discipline: "ELECTRICAL ARCHITECTURE",
+    meaning: "Represents steady power regulation, high-current delivery to drive motors, and resilient electrical design preventing brownouts.",
+    symbolism: "The energy pulse — distributing clean regulated current to sustain relentless performance through demanding match cycles.",
     svgX: 105,
     svgY: 332,
   },
   {
     index: 5,
     angle: 300,
-    title: "VERTEX 06 • INTELLIGENCE (300°)",
-    name: "Swastik Patra K",
-    role: "Programmer",
-    grade: "Grade 9",
-    image: swastikImg,
+    title: "CORNER 06 • INTELLIGENCE (300°)",
+    cornerName: "The Algorithmic Vector",
     discipline: "AUTONOMOUS LOGIC & TELEMETRY",
-    vectorRole: "The Algorithmic Vector",
-    matchContribution:
-      "Authored autonomous routine state machines, customized joystick deadband filters, exponential speed curve mappings, and real-time sensor odometry algorithms.",
-    symbolism:
-      "The intellect vector — transforming raw electrical signals and driver joystick inputs into fluid, predictable robotic behaviors.",
-    color: "from-yellow-400 to-amber-400",
+    meaning: "Represents precision software mapping, joystick calibration, responsive feedback loops, and intelligent autonomous routines.",
+    symbolism: "The intellect vector — transforming raw sensory and driver inputs into smooth, predictable robotic execution.",
     svgX: 105,
     svgY: 168,
   },
@@ -153,7 +98,7 @@ const logoVertices: LogoVertex[] = [
 
 export function LogoStory() {
   const [rotationAngle, setRotationAngle] = useState(0);
-  const [activeVertex, setActiveVertex] = useState<number>(0);
+  const [activeCorner, setActiveCorner] = useState<number>(0);
   const [thunderActive, setThunderActive] = useState(false);
   const [isCharging, setIsCharging] = useState(false);
 
@@ -162,17 +107,15 @@ export function LogoStory() {
     soundSystem.playMechanicalClick();
     setRotationAngle((prev) => {
       const next = prev + 60;
-      // Also update the active vertex corresponding to the top
       const nextIndex = ((Math.round(next / 60) % 6) + 6) % 6;
-      setActiveVertex(nextIndex);
+      setActiveCorner(nextIndex);
       return next;
     });
   }, []);
 
-  // Snap directly to a specific vertex
-  const selectVertex = useCallback((index: number) => {
-    setActiveVertex(index);
-    // Rotating by negative angle brings this vertex to the top (0°)
+  // Snap directly to a specific corner
+  const selectCorner = useCallback((index: number) => {
+    setActiveCorner(index);
     setRotationAngle(index * 60);
     soundSystem.playMechanicalClick();
   }, []);
@@ -181,7 +124,7 @@ export function LogoStory() {
   const resetOrientation = useCallback(() => {
     soundSystem.playMechanicalClick();
     setRotationAngle(0);
-    setActiveVertex(0);
+    setActiveCorner(0);
   }, []);
 
   // Trigger the full Convergence & Thunder sequence
@@ -204,7 +147,7 @@ export function LogoStory() {
     }, 450);
   }, [thunderActive, isCharging]);
 
-  const currentMember = logoVertices[activeVertex];
+  const currentCorner = emblemCorners[activeCorner];
 
   return (
     <div className="relative">
@@ -230,9 +173,9 @@ export function LogoStory() {
 
         <p className="mt-8 max-w-3xl text-base sm:text-lg text-muted-foreground leading-relaxed">
           The DPSBE Titans emblem is an exact regular hexagon with 60° rotational symmetry. Each of
-          its six corners represents one of our six student engineers. In isolation, six students
-          are just six separate points on a field. But when their diverse disciplines converge at
-          the focal point, they ignite the golden core —{" "}
+          its six corners represents one of the six team members. In isolation, six individual
+          points are just separate entities on a field. But when all six converge at the center,
+          they ignite the golden core —{" "}
           <strong className="text-foreground">when they come together, they thunder</strong>.
         </p>
 
@@ -253,27 +196,26 @@ export function LogoStory() {
               <div className="absolute inset-6 rounded-full border border-accent/20 pointer-events-none" />
 
               {/* 6 Angle Indicator Markers around the Perimeter */}
-              {logoVertices.map((v) => {
-                const isSelected = activeVertex === v.index;
-                // Calculate position on the circle (radius ~48%)
-                const rad = ((v.angle - 90) * Math.PI) / 180;
+              {emblemCorners.map((c) => {
+                const isSelected = activeCorner === c.index;
+                const rad = ((c.angle - 90) * Math.PI) / 180;
                 const leftPercent = 50 + 44 * Math.cos(rad);
                 const topPercent = 50 + 44 * Math.sin(rad);
 
                 return (
                   <button
-                    key={v.index}
+                    key={c.index}
                     type="button"
-                    onClick={() => selectVertex(v.index)}
-                    className={`absolute z-30 -translate-x-1/2 -translate-y-1/2 rounded-full px-2 py-1 text-[10px] font-mono font-bold transition-all ${
+                    onClick={() => selectCorner(c.index)}
+                    className={`absolute z-30 -translate-x-1/2 -translate-y-1/2 rounded-full px-2.5 py-1 text-[11px] font-mono font-bold transition-all ${
                       isSelected
                         ? "bg-accent text-black scale-110 shadow-lg shadow-accent/50 ring-2 ring-white"
                         : "bg-black/80 text-white/70 border border-white/20 hover:border-accent hover:text-accent hover:scale-105"
                     }`}
                     style={{ left: `${leftPercent}%`, top: `${topPercent}%` }}
-                    title={`Click to focus on ${v.name} (${v.angle}°)`}
+                    title={`Click to focus on Corner ${c.index + 1} (${c.angle}°)`}
                   >
-                    {v.angle}°
+                    {c.angle}°
                   </button>
                 );
               })}
@@ -327,14 +269,14 @@ export function LogoStory() {
                     </defs>
 
                     {/* Six Radial Electric Rays connecting the Center to all 6 Vertices */}
-                    {logoVertices.map((v) => (
-                      <g key={v.index}>
+                    {emblemCorners.map((c) => (
+                      <g key={c.index}>
                         {/* Golden energetic core line */}
                         <line
                           x1="250"
                           y1="250"
-                          x2={v.svgX}
-                          y2={v.svgY}
+                          x2={c.svgX}
+                          y2={c.svgY}
                           stroke="#FFE066"
                           strokeWidth={thunderActive ? "3.5" : "1.5"}
                           strokeDasharray={isCharging ? "4,4" : "none"}
@@ -345,8 +287,8 @@ export function LogoStory() {
                           <line
                             x1="250"
                             y1="250"
-                            x2={v.svgX}
-                            y2={v.svgY}
+                            x2={c.svgX}
+                            y2={c.svgY}
                             stroke="#FFFFFF"
                             strokeWidth="1.5"
                             opacity="0.9"
@@ -354,8 +296,8 @@ export function LogoStory() {
                         )}
                         {/* Terminal Node Spark at the vertex */}
                         <circle
-                          cx={v.svgX}
-                          cy={v.svgY}
+                          cx={c.svgX}
+                          cy={c.svgY}
                           r={thunderActive ? "7" : "4"}
                           fill="#FFFFFF"
                           className="animate-ping"
@@ -429,7 +371,7 @@ export function LogoStory() {
             </div>
           </div>
 
-          {/* Right Column: The Active Corner Dossier & Meaning */}
+          {/* Right Column: Meaning of the Emblem & Active Corner */}
           <div className="lg:col-span-6 space-y-6">
             <div className="space-y-2">
               <div className="flex items-center gap-2 font-mono text-xs text-accent">
@@ -442,74 +384,67 @@ export function LogoStory() {
             </div>
 
             <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-              In physics and mechanical truss design, the{" "}
-              <strong className="text-foreground">regular hexagon</strong> is the strongest polygon
-              known — providing the highest strength-to-weight ratio with 60° equilateral harmony.
-              Six corners support the hull; the center holds the electric power.
+              In structural geometry, the <strong className="text-foreground">regular hexagon</strong>{" "}
+              provides the highest strength-to-weight ratio and perfect 60° equilateral equilibrium.
+              Six corners support the perimeter; the center concentrates the energy. Each corner
+              represents one team member, and when all six forces converge at the center, they
+              create the lightning bolt.
             </p>
 
-            {/* Selected Vertex Card */}
+            {/* Selected Corner Meaning Card */}
             <div className="rounded-2xl border border-accent/40 bg-accent/10 p-5 sm:p-6 space-y-4 shadow-xl shadow-accent/10 relative overflow-hidden">
               <div className="flex items-center justify-between text-xs font-mono">
                 <span className="rounded-full bg-accent text-black font-bold px-3 py-1">
-                  {currentMember.title}
+                  {currentCorner.title}
                 </span>
-                <span className="text-accent/90 font-semibold">{currentMember.grade}</span>
+                <span className="text-accent/90 font-semibold font-mono">{currentCorner.discipline}</span>
               </div>
 
-              <div className="flex items-center gap-4">
-                <img
-                  src={currentMember.image}
-                  alt={currentMember.name}
-                  className="h-16 w-16 rounded-full object-cover border-2 border-accent shadow-md shadow-accent/20"
-                />
-                <div>
-                  <h3 className="text-xl font-bold text-foreground font-sans">
-                    {currentMember.name}
-                  </h3>
-                  <p className="font-mono text-xs text-accent font-semibold">
-                    {currentMember.role}
-                  </p>
-                  <p className="font-mono text-[11px] text-muted-foreground uppercase tracking-wider mt-0.5">
-                    {currentMember.discipline}
-                  </p>
-                </div>
+              <div>
+                <h3 className="text-xl font-bold text-foreground font-sans">
+                  {currentCorner.cornerName}
+                </h3>
+                <p className="font-mono text-xs text-accent mt-0.5">
+                  Corner {currentCorner.index + 1} of 6 — Vector Orientation {currentCorner.angle}°
+                </p>
               </div>
 
               <div className="border-t border-accent/20 pt-3 space-y-2 text-xs sm:text-sm">
                 <div className="font-semibold text-foreground/90 font-sans">
-                  Arena Responsibility:
+                  Hexagonal Representation:
                 </div>
                 <p className="text-muted-foreground leading-relaxed">
-                  {currentMember.matchContribution}
+                  {currentCorner.meaning}
                 </p>
 
                 <div className="font-semibold text-foreground/90 font-sans pt-1">
                   Insignia Symbolism:
                 </div>
-                <p className="text-muted-foreground leading-relaxed">{currentMember.symbolism}</p>
+                <p className="text-muted-foreground leading-relaxed">
+                  {currentCorner.symbolism}
+                </p>
               </div>
             </div>
 
-            {/* Quick Vertex Grid Selector */}
+            {/* Quick Corner Selector */}
             <div className="space-y-2">
               <div className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
-                QUICK ALIGN TO ANY CORNER:
+                EXPLORE EACH CORNER (60° INCREMENTS):
               </div>
               <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
-                {logoVertices.map((v) => (
+                {emblemCorners.map((c) => (
                   <button
-                    key={v.index}
+                    key={c.index}
                     type="button"
-                    onClick={() => selectVertex(v.index)}
+                    onClick={() => selectCorner(c.index)}
                     className={`rounded-lg border p-2 text-center transition-all font-mono text-xs ${
-                      activeVertex === v.index
+                      activeCorner === c.index
                         ? "border-accent bg-accent text-black font-bold shadow-md shadow-accent/30 scale-105"
                         : "border-white/10 bg-white/5 text-muted-foreground hover:bg-white/10 hover:text-foreground"
                     }`}
                   >
-                    <div className="text-[10px] opacity-75">{v.angle}°</div>
-                    <div className="truncate font-semibold mt-0.5">{v.name.split(" ")[0]}</div>
+                    <div className="text-[10px] opacity-75">{c.angle}°</div>
+                    <div className="truncate font-semibold mt-0.5">C-0{c.index + 1}</div>
                   </button>
                 ))}
               </div>
@@ -519,7 +454,7 @@ export function LogoStory() {
       </section>
 
       {/* ============================================================== */}
-      {/* SECTION 2: THE 4 ARCHITECTURAL LAYERS OF THE EMBLEM             */}
+      {/* SECTION 2: THE 4 ANATOMICAL LAYERS OF THE EMBLEM             */}
       {/* ============================================================== */}
       <section className="bg-surface px-page py-section border-t border-white/10">
         <div className="flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-widest text-accent">
@@ -541,9 +476,9 @@ export function LogoStory() {
             <div className="font-mono text-xs text-accent font-bold">LAYER 01</div>
             <h3 className="text-lg font-bold text-foreground">The Hexagonal Perimeter</h3>
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              A regular hexagon has 60° internal equilateral symmetry. In Kronos's engineering,
-              triangulated honeycomb trusses yield maximum chassis rigidity with minimum mass —
-              withstanding high-speed arena collisions.
+              A regular hexagon with 60° internal equilateral symmetry. It provides maximum
+              structural rigidity and balanced equilibrium, forming the protective perimeter of the
+              insignia.
             </p>
           </div>
 
@@ -554,9 +489,9 @@ export function LogoStory() {
             <div className="font-mono text-xs text-accent font-bold">LAYER 02</div>
             <h3 className="text-lg font-bold text-foreground">Six Inward-Converging Rays</h3>
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              The six triangular pointers do not project outward to dissipate energy; they point
-              strictly inward. Individual hours in the workshop funnel directly toward collective
-              tournament execution.
+              The six triangular rays originate from each of the six corners and point inward toward
+              the focal center. Each ray represents a member focusing their full dedication and
+              energy toward the core.
             </p>
           </div>
 
@@ -567,9 +502,9 @@ export function LogoStory() {
             <div className="font-mono text-xs text-accent font-bold">LAYER 03</div>
             <h3 className="text-lg font-bold text-foreground">The Golden Corona Ring</h3>
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              The concentric circle unifies the six points into an unbroken circuit. It represents
-              seamless telemetry, zero communication latency between driver, coach, pit crew, and
-              human player.
+              The concentric circle unifies all six inward rays into an unbroken circuit. It
+              represents complete team cohesion, zero friction, and flawless communication across all
+              six disciplines.
             </p>
           </div>
 
@@ -580,199 +515,74 @@ export function LogoStory() {
             <div className="font-mono text-xs text-accent font-bold">LAYER 04</div>
             <h3 className="text-lg font-bold text-foreground">The Central Thunderbolt</h3>
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              When six distinct forces converge with zero friction, potential energy discharges into
-              kinetic dominance. That explosive release is the Thunder — Team #174 striking the
-              Hyperdrive arena.
+              When all six corners unite with zero resistance, potential energy converts into pure
+              electric force. That explosive impact is the Thunder — the ultimate symbol of the
+              team coming together as one.
             </p>
           </div>
         </div>
       </section>
 
       {/* ============================================================== */}
-      {/* SECTION 3: THE SIX BUILDERS — DEEP DIVE DOSSIERS               */}
+      {/* SECTION 3: PHILOSOPHY OF THE SIX-CORNER CONVERGENCE             */}
       {/* ============================================================== */}
       <section className="bg-background px-page py-section border-t border-white/10">
-        <div className="flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-widest text-accent">
-          <span>CREW REPUTATION</span>
-          <span className="text-white/30">•</span>
-          <span>THE SIX CREW MEMBERS</span>
-        </div>
-
-        <h2 className="editorial-title text-foreground mt-4">
-          <span>THE SIX</span>
-          <span>BUILDERS.</span>
-        </h2>
-
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {logoVertices.map((vertex) => {
-            const isSelected = activeVertex === vertex.index;
-
-            return (
-              <div
-                key={vertex.index}
-                onClick={() => selectVertex(vertex.index)}
-                className={`group cursor-pointer rounded-2xl border p-6 flex flex-col justify-between transition-all duration-300 ${
-                  isSelected
-                    ? "border-accent bg-accent/15 shadow-xl shadow-accent/10 scale-[1.02]"
-                    : "border-white/10 bg-surface/40 hover:border-white/20 hover:bg-surface/70"
-                }`}
-              >
-                <div className="space-y-4">
-                  {/* Top Header */}
-                  <div className="flex items-center justify-between text-xs font-mono">
-                    <span className="rounded-full bg-accent/15 px-3 py-1 text-accent border border-accent/30 font-semibold">
-                      {vertex.title}
-                    </span>
-                    <span className="text-muted-foreground font-medium">{vertex.grade}</span>
-                  </div>
-
-                  {/* Member Photo & Identification */}
-                  <div className="flex items-center gap-3.5">
-                    <img
-                      src={vertex.image}
-                      alt={vertex.name}
-                      className="h-14 w-14 rounded-full object-cover border-2 border-white/20 group-hover:border-accent transition-colors"
-                    />
-                    <div>
-                      <h3 className="font-sans text-xl font-bold text-foreground group-hover:text-accent transition-colors">
-                        {vertex.name}
-                      </h3>
-                      <p className="font-mono text-xs text-accent/90 font-semibold mt-0.5">
-                        {vertex.role}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Discipline */}
-                  <div className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground border-b border-white/10 pb-2">
-                    {vertex.discipline}
-                  </div>
-
-                  {/* Match Role */}
-                  <div className="space-y-1 text-xs">
-                    <div className="font-mono font-semibold text-foreground/90 uppercase tracking-wider text-[10px]">
-                      HYPERDRIVE ROLE
-                    </div>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {vertex.matchContribution}
-                    </p>
-                  </div>
-
-                  {/* Symbolism */}
-                  <div className="space-y-1 text-xs">
-                    <div className="font-mono font-semibold text-accent uppercase tracking-wider text-[10px]">
-                      HEXAGONAL SYMBOLISM
-                    </div>
-                    <p className="text-muted-foreground leading-relaxed">{vertex.symbolism}</p>
-                  </div>
-                </div>
-
-                <div className="pt-4 mt-4 border-t border-white/10 flex items-center justify-between font-mono text-[11px] text-accent">
-                  <span>ALIGN CORNER ({vertex.angle}°)</span>
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* ============================================================== */}
-      {/* SECTION 4: HOW THUNDER OCCURS ON THE HYPERDRIVE ARENA           */}
-      {/* ============================================================== */}
-      <section className="bg-surface px-page py-section border-t border-white/10">
         <div className="max-w-4xl mx-auto space-y-10">
           <div className="text-center space-y-3">
             <div className="inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-widest text-accent">
               <Activity className="h-4 w-4" />
-              <span>TOURNAMENT EXECUTION</span>
+              <span>THE CORE PHILOSOPHY</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-bold uppercase text-foreground">
-              The 2:30 Convergence Cycle
+              Six Corners. One Thunder.
             </h2>
             <p className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto">
-              How the six corners of the emblem synchronize throughout a 2-minute 30-second NRL
-              match.
+              How six individual components combine into an unstoppable energetic force.
             </p>
           </div>
 
-          <div className="space-y-4">
-            <div className="rounded-xl border border-white/10 bg-black/40 p-5 sm:p-6 flex flex-col sm:flex-row gap-5 items-start sm:items-center">
-              <div className="font-mono text-sm font-bold text-accent bg-accent/10 px-3 py-1.5 rounded-lg border border-accent/20 shrink-0">
-                0:00 — 0:30
-              </div>
-              <div className="space-y-1">
-                <h4 className="font-bold text-foreground text-base">
-                  Phase 1: The Initial Punch — Core Intake & Placement
-                </h4>
-                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                  First 30 seconds. Ridit unleashes Kronos on the arena floor for the opening strike
-                  — swiftly collecting the initial field cores with the high-torque claw and
-                  dropping them cleanly and correctly into designated scoring zones.
-                </p>
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="rounded-2xl border border-white/10 bg-surface/50 p-6 space-y-3">
+              <div className="font-mono text-xs text-accent font-bold">01 • THE PERIMETER</div>
+              <h4 className="text-lg font-bold text-foreground">Individual Diversity</h4>
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                Six distinct corners spread evenly across 360 degrees. Each corner possesses its own
+                unique perspective, role, and discipline, ensuring the structure is balanced from
+                every angle.
+              </p>
             </div>
 
-            <div className="rounded-xl border border-white/10 bg-black/40 p-5 sm:p-6 flex flex-col sm:flex-row gap-5 items-start sm:items-center">
-              <div className="font-mono text-sm font-bold text-accent bg-accent/10 px-3 py-1.5 rounded-lg border border-accent/20 shrink-0">
-                0:30 — 1:00
-              </div>
-              <div className="space-y-1">
-                <h4 className="font-bold text-foreground text-base">
-                  Phase 2: Payload Delivery & Starburst Activation
-                </h4>
-                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                  Next 30 seconds. Seamless human-to-robot coordination: Supra (Supratik, Human
-                  Player) and Ridit (Driver) execute rapid payload delivery from the alliance
-                  station to Kronos, successfully triggering and activating the high-multiplier
-                  STARBURST period across the arena!
-                </p>
-              </div>
+            <div className="rounded-2xl border border-white/10 bg-surface/50 p-6 space-y-3">
+              <div className="font-mono text-xs text-accent font-bold">02 • THE CONVERGENCE</div>
+              <h4 className="text-lg font-bold text-foreground">Inward Focus</h4>
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                Rather than pointing outward or pulling in opposing directions, all six rays direct
+                their power inward toward the center. Harmony is achieved when personal effort serves
+                the collective mission.
+              </p>
             </div>
 
-            <div className="rounded-xl border border-white/10 bg-black/40 p-5 sm:p-6 flex flex-col sm:flex-row gap-5 items-start sm:items-center">
-              <div className="font-mono text-sm font-bold text-accent bg-accent/10 px-3 py-1.5 rounded-lg border border-accent/20 shrink-0">
-                1:00 — 2:00
+            <div className="rounded-2xl border border-accent/40 bg-accent/10 p-6 space-y-3 shadow-lg shadow-accent/10">
+              <div className="font-mono text-xs text-black font-bold bg-accent px-2 py-0.5 rounded w-fit">
+                03 • THE THUNDER
               </div>
-              <div className="space-y-1">
-                <h4 className="font-bold text-foreground text-base">
-                  Phase 3: Core Cycling — Targeting the Golden Cores (1-Min Sprint)
-                </h4>
-                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                  Next 1 minute. With Starburst active, Kronos enters a relentless 60-second cycling
-                  surge — prioritizing and scoring cores, especially hunting high-value Golden Cores
-                  to maximize multiplier points while Swastik's throttle maps and Abhinav's power
-                  bus sustain peak output.
-                </p>
-              </div>
-            </div>
-
-            <div className="rounded-xl border border-accent/40 bg-accent/10 p-5 sm:p-6 flex flex-col sm:flex-row gap-5 items-start sm:items-center shadow-lg shadow-accent/10">
-              <div className="font-mono text-sm font-bold text-black bg-accent px-3 py-1.5 rounded-lg shrink-0">
-                2:00 — 2:30
-              </div>
-              <div className="space-y-1">
-                <h4 className="font-bold text-foreground text-base">
-                  Phase 4: The Docking — Final Climax & Space Station Lock
-                </h4>
-                <p className="text-xs sm:text-sm text-foreground/90 leading-relaxed font-sans">
-                  Last 30 seconds. Ishaan counts down the match clock. Ridit maneuvers Kronos to the
-                  alliance Space Station ramp. The 4WD platform climbs, centers, and locks securely
-                  into the docking zone before the final buzzer sounds. Six corners united — the
-                  Thunder has landed.
-                </p>
-              </div>
+              <h4 className="text-lg font-bold text-foreground">Electric Release</h4>
+              <p className="text-xs sm:text-sm text-foreground/90 leading-relaxed">
+                At the exact point of intersection, the convergence ignites the thunderbolt. The
+                whole is exponentially greater than the sum of its parts. When they come together,
+                they thunder.
+              </p>
             </div>
           </div>
 
           {/* Bottom Navigation CTA */}
-          <div className="flex flex-wrap items-center justify-between gap-6 rounded-2xl border border-white/10 bg-black/60 p-6 sm:p-8">
+          <div className="flex flex-wrap items-center justify-between gap-6 rounded-2xl border border-white/10 bg-surface/80 p-6 sm:p-8 mt-12">
             <div>
               <h3 className="text-xl font-bold font-sans text-foreground">
-                Continue Into the Titans Journey
+                Explore the Journey Further
               </h3>
               <p className="font-mono text-xs text-muted-foreground mt-1">
-                Meet the crew behind the vertices or inspect the Kronos machine.
+                Meet the crew behind the corners or inspect the Kronos competition machine.
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -780,7 +590,7 @@ export function LogoStory() {
                 to="/team"
                 className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/5 px-4 py-2.5 font-mono text-xs font-bold text-foreground hover:bg-white/10 transition-all"
               >
-                <span>TEAM DOSSIERS</span>
+                <span>CREW PROFILES</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>
               <Link
